@@ -1,0 +1,136 @@
+package trends
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/machinebox/graphql"
+)
+
+type Db struct {
+	client *graphql.Client
+	secret string
+	ctx    *context.Context
+}
+
+func InitDb(faunaSecret string) *Db {
+	db := new(Db)
+	db.make(faunaSecret)
+	return db
+}
+
+func (db *Db) make(faunaSecret string) {
+	gc := graphql.NewClient("https://graphql.fauna.com/graphql")
+	ctx := context.Background()
+	db.client = gc
+	db.ctx = &ctx
+	db.secret = faunaSecret
+}
+
+var mutationReq = `
+mutation($segmentId:Int!) {
+  createSegment(data: {
+		segmentId: $segmentId
+	}) {
+		_id
+		segmentId
+		counts {
+			data {
+				ts
+				effortCount
+				athleteCount
+			}
+		}
+  }
+}
+`
+
+type Count struct {
+	Id       string `json:"_id"`
+	Ts       string `json:"ts"`
+	Efforts  int    `json:"effortCount"`
+	Athletes int    `json:"athleteCount"`
+}
+type CountWrapper struct {
+	Data []Count `json: "data"`
+}
+type Segment struct {
+	Id        string       `json:"_id"`
+	SegmentId int          `json:"segmentId"`
+	Counts    CountWrapper `json:"counts"`
+}
+type CreateSegmentMutation struct {
+	CreateSegment Segment `json:"createSegment"`
+}
+
+func (d Db) CreateSegment(segmentId int) CreateSegmentMutation {
+	req := graphql.NewRequest(mutationReq)
+	req.Var("segmentId", segmentId)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", d.secret))
+	var res CreateSegmentMutation
+	ctx := d.ctx
+	err := d.client.Run(*ctx, req, &res)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
+	return res
+}
+
+func (d Db) GetSegment(segmentId int) Segment {
+	req := graphql.NewRequest(`
+	query($segmentId:Int!) {
+		segmentById(segmentId:$segmentId) {
+			_id
+			segmentId
+			counts {
+				data {
+					_id
+					ts
+					effortCount
+					athleteCount
+				}
+			}
+		}
+	}
+	`)
+	req.Var("segmentId", segmentId)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", d.secret))
+	type SegmentWrapper struct {
+		Wrapper Segment `json:"segmentById"`
+	}
+	var resp SegmentWrapper
+	err := d.client.Run(*d.ctx, req, &resp)
+	if err != nil {
+		panic(err)
+	}
+	return resp.Wrapper
+}
+
+func (d Db) AddCount(segmentId, athleteCount, effortCount int) Count {
+	segment := d.GetSegment(segmentId)
+	req := graphql.NewRequest(`
+	mutation($segmentRef:ID!, $effortCount:Int!, $athleteCount:Int!, $ts: Time!) {
+		createCount(data: {segment: {connect: $segmentRef}, effortCount: $effortCount, athleteCount: $athleteCount, ts: $ts}) {
+			_id
+			ts
+			effortCount
+			athleteCount
+		}
+	}
+`)
+	req.Var("segmentRef", segment.Id)
+	req.Var("effortCount", effortCount)
+	req.Var("athleteCount", athleteCount)
+	req.Var("ts", "2020-04-01T00:00:00Z")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", d.secret))
+	type CreateCountWrapper struct {
+		Wrapper Count `json:"createCount"`
+	}
+	var res CreateCountWrapper
+	err := d.client.Run(*d.ctx, req, &res)
+	if err != nil {
+		panic(err)
+	}
+	return res.Wrapper
+}
