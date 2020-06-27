@@ -7,5 +7,6 @@ require (
 	github.com/matryer/is v1.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/strava/go.strava v0.0.0-20180612235916-99ebe972ba16
-	google.golang.org/genproto v0.0.0-20200624020401-64a14ca9d1ad // indirect
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+	google.golang.org/protobuf v1.24.0 // indirect
 )

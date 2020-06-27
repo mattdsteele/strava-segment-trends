@@ -78,6 +78,34 @@ func (d Db) CreateSegment(segmentId int) CreateSegmentMutation {
 	return res
 }
 
+func (d Db) AllSegmentIds() (ids []int) {
+	req := graphql.NewRequest(`
+	query {
+		allSegments {
+			data {
+				segmentId
+			}
+		}
+	}
+	`)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", d.secret))
+	type AllSegments struct {
+		Segments []Segment `json:"data"`
+	}
+	type Wrapper struct {
+		AllSegments AllSegments `json:"allSegments"`
+	}
+	var resp Wrapper
+	err := d.client.Run(*d.ctx, req, &resp)
+	if err != nil {
+		panic(err)
+	}
+	for _, s := range resp.AllSegments.Segments {
+		ids = append(ids, s.SegmentId)
+	}
+	return ids
+}
+
 func (d Db) GetSegment(segmentId int) Segment {
 	req := graphql.NewRequest(`
 	query($segmentId:Int!) {
@@ -110,10 +138,12 @@ func (d Db) GetSegment(segmentId int) Segment {
 
 func (d Db) AddCount(segmentId, athleteCount, effortCount int) *Count {
 	segment := d.GetSegment(segmentId)
-	recentCount := segment.Counts.Data[len(segment.Counts.Data)-1]
-	if recentCount.Efforts == effortCount {
-		fmt.Printf("Segment has same count as last check: %d", effortCount)
-		return nil
+	if len(segment.Counts.Data) > 0 {
+		recentCount := segment.Counts.Data[len(segment.Counts.Data)-1]
+		if recentCount.Efforts == effortCount {
+			fmt.Printf("Segment has same count as last check: %d", effortCount)
+			return nil
+		}
 	}
 	return d.updateCount(segment, athleteCount, effortCount)
 }
