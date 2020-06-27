@@ -3,6 +3,7 @@ package trends
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/machinebox/graphql"
 )
@@ -107,8 +108,17 @@ func (d Db) GetSegment(segmentId int) Segment {
 	return resp.Wrapper
 }
 
-func (d Db) AddCount(segmentId, athleteCount, effortCount int) Count {
+func (d Db) AddCount(segmentId, athleteCount, effortCount int) *Count {
 	segment := d.GetSegment(segmentId)
+	recentCount := segment.Counts.Data[len(segment.Counts.Data)-1]
+	if recentCount.Efforts == effortCount {
+		fmt.Printf("Segment has same count as last check: %d", effortCount)
+		return nil
+	}
+	return d.updateCount(segment, athleteCount, effortCount)
+}
+
+func (d Db) updateCount(segment Segment, athleteCount, effortCount int) *Count {
 	req := graphql.NewRequest(`
 	mutation($segmentRef:ID!, $effortCount:Int!, $athleteCount:Int!, $ts: Time!) {
 		createCount(data: {segment: {connect: $segmentRef}, effortCount: $effortCount, athleteCount: $athleteCount, ts: $ts}) {
@@ -122,7 +132,7 @@ func (d Db) AddCount(segmentId, athleteCount, effortCount int) Count {
 	req.Var("segmentRef", segment.Id)
 	req.Var("effortCount", effortCount)
 	req.Var("athleteCount", athleteCount)
-	req.Var("ts", "2020-04-01T00:00:00Z")
+	req.Var("ts", time.Now().UTC().Format(time.RFC3339))
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", d.secret))
 	type CreateCountWrapper struct {
 		Wrapper Count `json:"createCount"`
@@ -132,5 +142,5 @@ func (d Db) AddCount(segmentId, athleteCount, effortCount int) Count {
 	if err != nil {
 		panic(err)
 	}
-	return res.Wrapper
+	return &res.Wrapper
 }
