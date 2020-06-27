@@ -3,7 +3,6 @@ package trends
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	strava "github.com/strava/go.strava"
@@ -16,30 +15,31 @@ type Strava struct {
 	cfg    *oauth2.Config
 }
 
-func InitStrava(token string) *Strava {
-	s := new(Strava)
-	c := strava.NewClient(token)
-	s.client = c
-	return s
+type StravaConfig struct {
+	AccessToken  string
+	RefreshToken string
+	Expiry       time.Time
+	ClientId     string
+	ClientSecret string
 }
 
-func InitWithRefresh(accessToken, refreshToken string, expiry time.Time) *Strava {
+func InitWithRefresh(config StravaConfig) *Strava {
 	authorizeUrl := "https://www.strava.com/oauth/token"
 	cfg := oauth2.Config{
-		ClientID:     os.Getenv("STRAVA_CLIENT_ID"),
-		ClientSecret: os.Getenv("STRAVA_CLIENT_SECRET"),
+		ClientID:     config.ClientId,
+		ClientSecret: config.ClientSecret,
 		Endpoint: oauth2.Endpoint{
 			TokenURL: authorizeUrl,
 		},
 	}
 	tkn := oauth2.Token{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-		Expiry:       expiry,
+		AccessToken:  config.AccessToken,
+		RefreshToken: config.RefreshToken,
+		Expiry:       config.Expiry,
 	}
 	tokenSrc := cfg.TokenSource(context.Background(), &tkn)
 	client := oauth2.NewClient(context.Background(), tokenSrc)
-	c := strava.NewClient(accessToken, client)
+	c := strava.NewClient(config.AccessToken, client)
 
 	s := new(Strava)
 	s.client = c
@@ -49,7 +49,7 @@ func InitWithRefresh(accessToken, refreshToken string, expiry time.Time) *Strava
 	return s
 }
 
-func (s Strava) RenewToken() *oauth2.Token {
+func (s *Strava) RenewToken() *oauth2.Token {
 	if s.token.Expiry.After(time.Now()) {
 		fmt.Printf("token not invalid yet: %s\n", s.token.Expiry.Format(time.RFC3339))
 	}

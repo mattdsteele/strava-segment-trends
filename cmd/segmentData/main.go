@@ -15,25 +15,22 @@ func main() {
 	stravaExpiryStr := os.Getenv("STRAVA_EXPIRY")
 	stravaExpiry, _ := time.Parse(time.RFC3339, stravaExpiryStr)
 
-	strava := trends.InitWithRefresh(stravaAccessToken, stravaRefreshToken, stravaExpiry)
+	strava := trends.InitWithRefresh(trends.StravaConfig{
+		AccessToken:  stravaAccessToken,
+		RefreshToken: stravaRefreshToken,
+		Expiry:       stravaExpiry,
+		ClientId:     os.Getenv("STRAVA_CLIENT_ID"),
+		ClientSecret: os.Getenv("STRAVA_CLIENT_SECRET"),
+	})
 	db := trends.InitDb(faunaSecret)
-	segmentIds := db.AllSegmentIds()
-	for {
-		// first, verify token is not expired
-		newToken := strava.RenewToken()
-		if newToken != nil {
-			fmt.Println("got new access token!")
-			fmt.Printf("access:  %s\n", newToken.AccessToken)
-			fmt.Printf("refresh: %s\n", newToken.RefreshToken)
-			fmt.Printf("expiry:  %s\n", newToken.Expiry.UTC().Format(time.RFC3339))
-		}
 
-		for _, segmentID := range segmentIds {
-			stats := strava.Stats(int64(segmentID))
-			count := db.AddCount(segmentID, stats.AthleteCount, stats.EffortCount)
-			fmt.Println(count)
-		}
+	t := &trends.Trends{
+		Strava: strava,
+		Db:     db,
+	}
+	for {
+		t.Populate()
 		fmt.Println("sleeping...")
-		time.Sleep(1 * time.Hour)
+		time.Sleep(30 * time.Minute)
 	}
 }
