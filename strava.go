@@ -3,6 +3,7 @@ package trends
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	strava "github.com/strava/go.strava"
@@ -25,6 +26,8 @@ func InitStrava(token string) *Strava {
 func InitWithRefresh(accessToken, refreshToken string, expiry time.Time) *Strava {
 	authorizeUrl := "https://www.strava.com/oauth/token"
 	cfg := oauth2.Config{
+		ClientID:     os.Getenv("STRAVA_CLIENT_ID"),
+		ClientSecret: os.Getenv("STRAVA_CLIENT_SECRET"),
 		Endpoint: oauth2.Endpoint{
 			TokenURL: authorizeUrl,
 		},

@@ -23,9 +23,9 @@ func main() {
 		newToken := strava.RenewToken()
 		if newToken != nil {
 			fmt.Println("got new access token!")
-			fmt.Printf("access:  %s", newToken.AccessToken)
-			fmt.Printf("refresh: %s", newToken.RefreshToken)
-			fmt.Printf("expiry:  %s", newToken.Expiry.Format(time.RFC822))
+			fmt.Printf("access:  %s\n", newToken.AccessToken)
+			fmt.Printf("refresh: %s\n", newToken.RefreshToken)
+			fmt.Printf("expiry:  %s\n", newToken.Expiry.UTC().Format(time.RFC3339))
 		}
 
 		for _, segmentID := range segmentIds {
