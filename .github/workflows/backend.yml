@@ -8,7 +8,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+  PROJECT_ID: ${{ secrets.GCLUOD_PROJECT }}
   RUN_REGION: us-central1
   SERVICE_NAME: populate-trends
 
@@ -25,8 +25,8 @@ jobs:
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '298.0.0'
-          service_account_key: ${{ secrets.RUN_SA_KEY }}
-          project_id: ${{ secrets.RUN_PROJECT }}
+          service_account_key: ${{ secrets.GCLOUD_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCLUOD_PROJECT }}
       # Deploy image to Cloud Run
       - name: Deploy
         run: |-
