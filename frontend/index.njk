@@ -1,0 +1,9 @@
+---
+layout: 'layouts/base.njk'
+---
+
+<h2>Omaha Trail Segments</h2>
+
+{% for segment in segments %}
+{% include "layouts/segment.njk" %}
+{% endfor %}

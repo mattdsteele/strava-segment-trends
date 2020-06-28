@@ -1,0 +1,7 @@
+<h3>{{segment.name}} <a href="https://www.strava.com/segments/{{segment.segmentId}}">({{segment.segmentId}})</a></h3>
+
+<ul>
+{% for count in segment.counts.data %}
+<li> {{count.ts}} - {{count.effortCount}} ({{count.athleteCount}})</li>
+  {% endfor %}
+</ul>

@@ -1,15 +1,19 @@
 const { allSegments } = require('../src/recent-segments');
 const { segmentData } = require('../src/strava');
+const flatCache = require('flat-cache');
+const cache = flatCache.load('segments');
 
-module.exports = async () => {
+const checkOrGet = async () => {
+  let segments = cache.getKey('segments');
+  if (!segments) {
+    segments = await get();
+    cache.setKey('segments', segments);
+    cache.save();
+  }
+  return cache.getKey('segments');
+};
+const get = async () => {
   const segments = await allSegments();
-  const [s, b] = segments;
-  console.log(s.segmentId);
-  // await segmentData(s.segmentId);
-  // await segmentData(b.segmentId);
-  // const moreSegmentData = await segmentData(s.segmentId);
-  // s.name = moreSegmentData.name;
-  // return [s];
   return await Promise.all(
     segments.map(async (s) => {
       console.log(s.segmentId);
@@ -18,4 +22,7 @@ module.exports = async () => {
       return s;
     })
   );
+};
+module.exports = async () => {
+  return await checkOrGet();
 };
