@@ -1,0 +1,29 @@
+name: Netlify Deploy
+
+on:
+  push:
+    paths:
+      - frontend/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: npm install, build
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+      - name: Deploy to Netlify
+        uses: 'netlify/actions/cli@master'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{secrets.NETLIFY_ACCESS_TOKEN}}
+          NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE}}
+        with:
+          args: 'deploy -p'
