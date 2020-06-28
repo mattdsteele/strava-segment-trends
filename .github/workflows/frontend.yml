@@ -6,6 +6,8 @@ on:
       - frontend/**
     branches:
       - main
+  schedule:
+    - cron: '5 0-3,12-23 * * *'
 
 jobs:
   build:
