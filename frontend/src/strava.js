@@ -43,8 +43,8 @@ const api = new SegmentsApi(
   'https://www.strava.com/api/v3',
   axios
 );
-const segmentData = async (segmentId) => {
+const stravaData = async (segmentId) => {
   const segment = await api.getSegmentById(segmentId);
   return segment.data;
 };
-module.exports.segmentData = segmentData;
+module.exports.stravaData = stravaData;
