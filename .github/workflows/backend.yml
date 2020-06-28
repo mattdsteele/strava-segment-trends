@@ -31,7 +31,7 @@ jobs:
       - name: Deploy
         run: |-
           gcloud functions deploy "$SERVICE_NAME" \
-            --trigger-topic tj-trends
-            --runtime go111
-            --entry-point GetLatestTrends
+            --trigger-topic tj-trends \
+            --runtime go111 \
+            --entry-point GetLatestTrends \
             --source backend

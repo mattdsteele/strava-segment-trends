@@ -29,5 +29,6 @@ func GetLatestTrends(_ context.Context, _ Message) error {
 		Db:     db,
 	}
 	t.Populate()
+	// Return nil
 	return nil
 }
