@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - frontend/**
+    branches:
+      - main
 
 jobs:
   build:
@@ -26,4 +28,4 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{secrets.NETLIFY_ACCESS_TOKEN}}
           NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE}}
         with:
-          args: 'deploy -p'
+          args: 'deploy -p --dir=frontend/_site'

@@ -3,14 +3,14 @@ name: Build and Deploy to Cloud Function
 on:
   push:
     paths:
-      - frontend/**
+      - backend/**
     branches:
       - main
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
-  SERVICE_NAME: secret-strava
+  SERVICE_NAME: populate-trends
 
 jobs:
   setup-build-deploy:
@@ -24,23 +24,14 @@ jobs:
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          version: '290.0.1'
+          version: '298.0.0'
           service_account_key: ${{ secrets.RUN_SA_KEY }}
           project_id: ${{ secrets.RUN_PROJECT }}
-
-      # Build and push image to Google Container Registry
-      - name: Build
-        run: |-
-          gcloud builds submit \
-            --quiet \
-            --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
-
       # Deploy image to Cloud Run
       - name: Deploy
         run: |-
-          gcloud run deploy "$SERVICE_NAME" \
-            --quiet \
-            --region "$RUN_REGION" \
-            --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-            --platform "managed" \
-            --allow-unauthenticated
+          gcloud functions deploy "$SERVICE_NAME" \
+            --trigger-topic tj-trends
+            --runtime go111
+            --entry-point GetLatestTrends
+            --source backend
