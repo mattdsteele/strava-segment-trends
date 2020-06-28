@@ -1,4 +1,4 @@
-# Hello world
+# Strava Segment Trends
 
 {% for data in segments %}
 
