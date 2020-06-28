@@ -6,6 +6,7 @@
   "scripts": {
     "build": "eleventy",
     "serve": "eleventy --serve",
+    "serve-debug": "DEBUG=true eleventy --serve",
     "clean": "rm -rf node_modules/flat-cache/.cache",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

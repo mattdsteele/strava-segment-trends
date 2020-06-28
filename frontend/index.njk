@@ -6,6 +6,20 @@ layout: 'layouts/base.njk'
 
 <h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
 
+{% showchart %}
+
 {% for segment in segments %}
-{% include "layouts/segment.njk" %}
+  <h2>{{segment.trail}} - {{segment.strava.name}} <a href="https://www.strava.com/segments/{{segment.segmentId}}">({{segment.segmentId}})</a></h2>
+
+  <h3>Last ridden: <relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time> {{segment.stats.lastEffort.efforts}} time{{segment.stats.lastEffort.efforts | pluralize}} </h3>
+
+  <h3>Ridden today: {{segment.stats.todayStats.count}}</h3>
+  <h3>Ridden yesterday: {{segment.stats.yesterdayStats.count}}</h3>
+
+  <ul>
+  {% for count in segment.counts.data %}
+  <li> {{count.ts}} - {{count.effortCount}} ({{count.athleteCount}})</li>
+    {% endfor %}
+  </ul>
+
 {% endfor %}

@@ -1,8 +1,7 @@
 const { pluralize } = require('journalize');
-const makeChart = (data) => {
-  return `<pre>${JSON.stringify(data)}</pre>`;
-};
+const { renderChart } = require('./src/charts');
+// const { renderChart } = require('./src/charts');
 module.exports = (eleventyConfig) => {
   eleventyConfig.addFilter('pluralize', (value) => pluralize(value));
-  eleventyConfig.addShortcode('chart', makeChart);
+  eleventyConfig.addNunjucksAsyncShortcode('showchart', renderChart);
 };
