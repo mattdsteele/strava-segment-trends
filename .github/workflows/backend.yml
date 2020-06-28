@@ -8,7 +8,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCLUOD_PROJECT }}
+  PROJECT_ID: ${{ secrets.GCLOUD_PROJECT }}
   RUN_REGION: us-central1
   SERVICE_NAME: populate-trends
 
@@ -26,7 +26,7 @@ jobs:
         with:
           version: '298.0.0'
           service_account_key: ${{ secrets.GCLOUD_ACCOUNT_KEY }}
-          project_id: ${{ secrets.GCLUOD_PROJECT }}
+          project_id: ${{ secrets.GCLOUD_PROJECT }}
       # Deploy image to Cloud Run
       - name: Deploy
         run: |-
