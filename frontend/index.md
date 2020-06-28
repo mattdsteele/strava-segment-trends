@@ -1,4 +1,4 @@
-# Strava Segment Trends
+# Strava Trail Segments
 
 {% for data in segments %}
 
