@@ -2,40 +2,40 @@ const { allSegments } = require('../src/recent-segments');
 const { stravaData } = require('../src/strava');
 const { ZoneId, ZonedDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
+require('@js-joda/timezone');
 const flatCache = require('flat-cache');
 const cache = flatCache.load('segments');
 
 const generateStats = (segment) => {
   const counts = segment.counts.data;
   const lastEffort = counts[counts.length - 1];
-  const prevEffort = counts[counts.length - 2];
 
-  const startOfToday = ZonedDateTime.now()
+  const omaha = ZoneId.of('America/Chicago');
+  const startOfToday = ZonedDateTime.now(omaha)
     .toLocalDate()
-    .atStartOfDayWithZone(ZoneId.SYSTEM);
-  const endOfToday = ZonedDateTime.now()
+    .atStartOfDayWithZone(omaha);
+  const endOfToday = ZonedDateTime.now(omaha)
     .plusDays(1)
     .toLocalDate()
-    .atStartOfDayWithZone(ZoneId.SYSTEM);
+    .atStartOfDayWithZone(omaha);
   const todayRange = Interval.of(
     startOfToday.toInstant(),
     endOfToday.toInstant()
   );
-  console.log(todayRange);
   const eventsToday = counts.filter((e) => {
     const ts = ZonedDateTime.parse(e.ts);
     return todayRange.contains(ts.toInstant());
   });
 
-  const startOfYesterday = ZonedDateTime.now()
+  const startOfYesterday = ZonedDateTime.now(omaha)
     .minusDays(1)
     .toLocalDate()
-    .atStartOfDayWithZone(ZoneId.SYSTEM);
-  const endOfYesterday = ZonedDateTime.now()
+    .atStartOfDayWithZone(omaha);
+  const endOfYesterday = ZonedDateTime.now(omaha)
     .minusDays(1)
     .plusDays(1)
     .toLocalDate()
-    .atStartOfDayWithZone(ZoneId.SYSTEM);
+    .atStartOfDayWithZone(omaha);
   const yesterdayRange = Interval.of(
     startOfYesterday.toInstant(),
     endOfYesterday.toInstant()
@@ -54,12 +54,12 @@ const generateStats = (segment) => {
   const todayStats = {
     baseline: lastEvent,
     events: eventsToday,
-    count: eventsToday.reduce((prev, curr) => prev + curr.efforts, 0),
+    count: eventsToday.reduce((prev, curr) => prev + curr.efforts || 0, 0),
   };
 
   const yesterdayStats = {
     events: eventsYesterday,
-    count: eventsYesterday.reduce((prev, curr) => prev + curr.efforts, 0),
+    count: eventsYesterday.reduce((prev, curr) => prev + curr.efforts || 0, 0),
   };
 
   return {

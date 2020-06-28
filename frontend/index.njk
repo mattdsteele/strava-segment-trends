@@ -4,6 +4,8 @@ layout: 'layouts/base.njk'
 
 <h2>Omaha Trail Segments</h2>
 
+<h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
+
 {% for segment in segments %}
 {% include "layouts/segment.njk" %}
 {% endfor %}

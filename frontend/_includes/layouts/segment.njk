@@ -1,6 +1,6 @@
-<h2>{{segment.strava.name}} <a href="https://www.strava.com/segments/{{segment.segmentId}}">({{segment.segmentId}})</a></h2>
+<h2>{{segment.trail}} - {{segment.strava.name}} <a href="https://www.strava.com/segments/{{segment.segmentId}}">({{segment.segmentId}})</a></h2>
 
-<h3>Last ridden: <relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time> {{segment.stats.lastEffort.efforts}} times </h3>
+<h3>Last ridden: <relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time> {{segment.stats.lastEffort.efforts}} time{{segment.stats.lastEffort.efforts | pluralize}} </h3>
 
 <h3>Ridden today: {{segment.stats.todayStats.count}}</h3>
 <h3>Ridden yesterday: {{segment.stats.yesterdayStats.count}}</h3>
@@ -11,6 +11,7 @@
   {% endfor %}
 </ul>
 
-<pre>
+{% chart segment %}
+<!--pre>
 {{segment | dump(2)}}
-</pre>
+</pre-->

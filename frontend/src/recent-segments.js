@@ -8,6 +8,7 @@ const q = gql`
     allSegments {
       data {
         segmentId
+        trail
         counts {
           data {
             athleteCount
