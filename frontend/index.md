@@ -1,4 +1,4 @@
-# Strava Trail Segments
+# Omaha Trail Segments
 
 {% for data in segments %}
 
