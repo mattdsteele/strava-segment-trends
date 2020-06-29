@@ -18,8 +18,10 @@ layout: 'layouts/base.njk'
 
   <ul>
   {% for count in segment.counts.data %}
-  <li> {{count.ts}} - {{count.effortCount}} ({{count.athleteCount}})</li>
+  <li> {{count.ts}} - <strong>{{count.efforts}}</strong> ({{count.effortCount}})</li>
     {% endfor %}
   </ul>
+
+  <hr>
 
 {% endfor %}
