@@ -18,7 +18,7 @@ layout: 'layouts/base.njk'
 
   <ul>
   {% for count in segment.counts.data %}
-  <li> {{count.ts}} - <strong>{{count.efforts}}</strong> ({{count.effortCount}})</li>
+  <li> {{count.ts | localTime}} - <strong>{{count.efforts}}</strong> ({{count.effortCount}})</li>
     {% endfor %}
   </ul>
 
