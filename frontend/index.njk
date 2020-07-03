@@ -2,7 +2,7 @@
 layout: 'layouts/base.njk'
 ---
 
-<h2>Omaha Trail Segments</h2>
+<h1>Omaha Trail Segments</h1>
 
 <h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
 
@@ -10,23 +10,18 @@ layout: 'layouts/base.njk'
 
   <h2>{{segment.trail}} - {{segment.strava.name}} <a href="https://www.strava.com/segments/{{segment.segmentId}}">({{segment.segmentId}})</a></h2>
 
-  <div>
-    <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy" width="800" height="600">
-  </div>
 
   <h3>Last ridden: {{segment.stats.lastEffort.efforts}} time{{segment.stats.lastEffort.efforts | pluralize}}, <relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time> </h3>
 
   <h3>Ridden today: {{segment.stats.todayStats.count}}</h3>
   <h3>Ridden yesterday: {{segment.stats.yesterdayStats.count}}</h3>
 
-  {% showchart segment.counts.data %}
 
-  <ul>
-  {% for count in segment.counts.data %}
-  <li> {{count.ts | localTime}} - <strong>{{count.efforts}}</strong> ({{count.effortCount}})</li>
-    {% endfor %}
-  </ul>
+  {% showchart segment %}
 
+  <div>
+    <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy" width="800" height="600">
+  </div>
   <hr>
 
 {% endfor %}
