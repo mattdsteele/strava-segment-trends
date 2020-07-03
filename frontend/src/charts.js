@@ -13,8 +13,9 @@ const statsForSegment = (segment) => {
   const dataStats = segment.counts.data
     .filter((t) => t.efforts > 0)
     .map(({ ts, efforts }) => {
-      const zdt = ZonedDateTime.parse(ts).withZoneSameInstant(omaha);
-      const zdts = zdt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+      const zdt = ZonedDateTime.parse(ts)
+        .minusHours(1)
+        .withZoneSameInstant(omaha);
       const hour = zdt.hour();
       const segmentDate = zdt.toLocalDate();
       const p = Period.between(segmentDate, today);
