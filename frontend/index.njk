@@ -7,11 +7,12 @@ layout: 'layouts/base.njk'
 <h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
 
 {% for segment in segments %}
+
   <h2>{{segment.trail}} - {{segment.strava.name}} <a href="https://www.strava.com/segments/{{segment.segmentId}}">({{segment.segmentId}})</a></h2>
 
-<div>
-  <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy" width="800" height="600">
-</div>
+  <div>
+    <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy" width="800" height="600">
+  </div>
 
   <h3>Last ridden: {{segment.stats.lastEffort.efforts}} time{{segment.stats.lastEffort.efforts | pluralize}}, <relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time> </h3>
 
