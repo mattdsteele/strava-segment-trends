@@ -20,6 +20,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '298.0.0'
+          service_account_key: ${{ secrets.GCLOUD_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCLOUD_PROJECT }}
       - name: npm install, build
         env:
           FAUNA_SECRET: ${{secrets.FAUNA_SECRET}}
