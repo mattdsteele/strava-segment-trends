@@ -4,7 +4,7 @@ const { ZoneId, ZonedDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const flatCache = require('flat-cache');
-const { saveMap, exists, generateMap } = require('../src/maps');
+const { saveMap, exists, generateMap, downloadMap } = require('../src/maps');
 const cache = flatCache.load('segments');
 
 const generateStats = (segment) => {
@@ -93,13 +93,15 @@ const allSegmentData = async () => {
         segmentId
       );
       generateCounts(segment);
-      const imageFile = `images/map-${segmentId}.png`;
-      if (!exists(imageFile)) {
-        const segmentMap = await generateMap(segment.strava);
-        await saveMap(imageFile, segmentMap);
-      }
       segment.stats = generateStats(segment);
       return segment;
+    })
+  );
+  await Promise.all(
+    augmentedSegmentData.map(async ({ segmentId }) => {
+      if (!exists(`images/map-${segmentId}.png`)) {
+        await downloadMap(segmentId);
+      }
     })
   );
   cache.save();
