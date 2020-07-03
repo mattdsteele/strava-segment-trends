@@ -22,10 +22,12 @@ const generateStats = (segment) => {
     startOfToday.toInstant(),
     endOfToday.toInstant()
   );
-  const eventsToday = counts.filter((e) => {
-    const ts = ZonedDateTime.parse(e.ts);
-    return todayRange.contains(ts.toInstant());
-  });
+  const eventsToday = counts
+    .filter((e) => {
+      const ts = ZonedDateTime.parse(e.ts);
+      return todayRange.contains(ts.toInstant());
+    })
+    .filter((e) => e.efforts > 0);
 
   const startOfYesterday = ZonedDateTime.now(omaha)
     .minusDays(1)
@@ -40,10 +42,12 @@ const generateStats = (segment) => {
     startOfYesterday.toInstant(),
     endOfYesterday.toInstant()
   );
-  const eventsYesterday = counts.filter((e) => {
-    const ts = ZonedDateTime.parse(e.ts);
-    return yesterdayRange.contains(ts.toInstant());
-  });
+  const eventsYesterday = counts
+    .filter((e) => {
+      const ts = ZonedDateTime.parse(e.ts);
+      return yesterdayRange.contains(ts.toInstant());
+    })
+    .filter((e) => e.efforts > 0);
   const [firstAtStartOfDay] = eventsToday;
   const idxOfStartOfDay = counts.indexOf(firstAtStartOfDay);
 
