@@ -47,4 +47,16 @@ const stravaData = async (segmentId) => {
   const segment = await api.getSegmentById(segmentId);
   return segment.data;
 };
+
+const generateCounts = (segment) => {
+  const data = segment.counts.data;
+  data.forEach((c, i) => {
+    if (i > 0) {
+      const prevCount = data[i - 1].effortCount;
+      c.efforts = c.effortCount - prevCount;
+    }
+  });
+};
+
 module.exports.stravaData = stravaData;
+module.exports.generateCounts = generateCounts;

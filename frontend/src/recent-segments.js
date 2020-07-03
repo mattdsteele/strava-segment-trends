@@ -9,7 +9,7 @@ const q = gql`
       data {
         segmentId
         trail
-        counts {
+        counts(_size: 1000) {
           data {
             athleteCount
             effortCount

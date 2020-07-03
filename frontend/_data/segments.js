@@ -1,11 +1,10 @@
 const { allSegments } = require('../src/recent-segments');
-const { stravaData } = require('../src/strava');
+const { stravaData, generateCounts } = require('../src/strava');
 const { ZoneId, ZonedDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
-const flatCache = require('flat-cache');
 const { saveMap, exists, generateMap, downloadMap } = require('../src/maps');
-const cache = flatCache.load('segments');
+const { checkOrGet, saveCache } = require('../src/cache');
 
 const generateStats = (segment) => {
   const counts = segment.counts.data;
@@ -69,15 +68,6 @@ const generateStats = (segment) => {
     yesterdayStats,
   };
 };
-const generateCounts = (segments) => {
-  const data = segments.counts.data;
-  data.forEach((c, i) => {
-    if (i > 0) {
-      const prevCount = data[i - 1].effortCount;
-      c.efforts = c.effortCount - prevCount;
-    }
-  });
-};
 const allSegmentData = async () => {
   const segmentData = await checkOrGet(
     'segment-counts',
@@ -104,18 +94,8 @@ const allSegmentData = async () => {
       }
     })
   );
-  cache.save();
+  saveCache();
   return augmentedSegmentData;
-};
-
-const checkOrGet = async (key, fn, id) => {
-  let cached = cache.getKey(key);
-  if (!cached) {
-    console.log(`getting data for ${key}`);
-    cached = await fn(id);
-    cache.setKey(key, cached);
-  }
-  return cache.getKey(key);
 };
 
 module.exports = async () => {
