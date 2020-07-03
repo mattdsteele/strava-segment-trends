@@ -2,8 +2,6 @@
 layout: 'layouts/base.njk'
 ---
 
-<h1>Omaha Trail Segments</h1>
-
 <style>
 /* System Fonts as used by GitHub */
 body {
@@ -11,13 +9,28 @@ body {
 }
 .trail {
   display: flex;
+  flex-direction: column;
+}
+header {
+  text-align: center;
+}
+@media(min-width: 700px) {
+.trail {
+  flex-direction: row;
+  margin: auto;
   max-width: 1100px;
+}
+.title {
+  margin: auto;
+  max-width: 1100px;
+  font-size: 1.3em;
 }
 .map {
   width: 35%;
 }
 .stats {
   width: 65%;
+}
 }
 img {
   max-width: 100%;
@@ -39,10 +52,14 @@ img {
 
 </style>
 
-<h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
+<header>
+  <h1>Omaha Trail Segments</h1>
+  <h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
+</header>
 
 {% for segment in segments %}
 
+<div class="segment">
   <div class="title">
     <h2>{{segment.trail}} - {{segment.strava.name}} (<a href="https://www.strava.com/segments/{{segment.segmentId}}">{{segment.segmentId}}</a>)</h2>
   </div>
@@ -71,6 +88,7 @@ img {
     </div>
 
   </section>
+</div>
   <hr>
 {% endfor %}
 
