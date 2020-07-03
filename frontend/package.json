@@ -7,7 +7,7 @@
     "build": "eleventy",
     "serve": "eleventy --serve",
     "serve-debug": "DEBUG=true eleventy --serve",
-    "clean": "rm -rf node_modules/flat-cache/.cache",
+    "clean": "del-cli node_modules/flat-cache/.cache",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,6 +24,7 @@
     "@types/node": "^14.0.14",
     "axios-auth-refresh": "^2.2.7",
     "axios-debug-log": "^0.7.0",
+    "del-cli": "^3.0.1",
     "flat-cache": "^2.0.1",
     "graphql": "^15.1.0",
     "graphql-request": "^2.1.0-next.1",
