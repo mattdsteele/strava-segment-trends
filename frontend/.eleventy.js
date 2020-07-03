@@ -12,6 +12,12 @@ module.exports = (eleventyConfig) => {
     return z;
   });
   eleventyConfig.addNunjucksAsyncShortcode('showchart', renderHeatmap);
+  eleventyConfig.addNunjucksAsyncShortcode('charturi', async (segment) => {
+    const svg = await renderHeatmap(segment);
+    const base64 = Buffer.from(svg).toString('base64');
+    return `data:image/svg+xml;base64,${base64}`;
+  });
+
   eleventyConfig.setBrowserSyncConfig({
     ghostMode: false,
   });

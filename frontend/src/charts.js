@@ -116,7 +116,7 @@ const render = async (schema) => {
   const { spec } = vegaLite.compile(schema);
   const view = new vega.View(vega.parse(spec), { renderer: 'none' });
   const svg = await view.toSVG();
-  return `<div class="chart">${svg}</div>`;
+  return svg;
 };
 module.exports.renderChart = renderChart;
 module.exports.renderHeatmap = renderHeatmap;
