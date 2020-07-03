@@ -4,9 +4,8 @@ const { ZoneId, ZonedDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const flatCache = require('flat-cache');
+const { saveMap, exists, generateMap } = require('../src/maps');
 const cache = flatCache.load('segments');
-const polyline = require('@mapbox/polyline');
-const osm = require('osm-static-maps');
 
 const generateStats = (segment) => {
   const counts = segment.counts.data;
@@ -94,9 +93,11 @@ const allSegmentData = async () => {
         segmentId
       );
       generateCounts(segment);
-      segment.polyline = polyline.toGeoJSON(segment.strava.map.polyline);
-      const map = await osm({ geojson: segment.polyline });
-      console.log(map);
+      const imageFile = `images/map-${segmentId}.png`;
+      if (!exists(imageFile)) {
+        const segmentMap = await generateMap(segment.strava);
+        await saveMap(imageFile, segmentMap);
+      }
       segment.stats = generateStats(segment);
       return segment;
     })

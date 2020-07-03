@@ -29,6 +29,7 @@ jobs:
           STRAVA_CLIENT_SECRET: ${{secrets.STRAVA_CLIENT_SECRET}}
           STRAVA_EXPIRY: ${{secrets.STRAVA_EXPIRY}}
           STRAVA_REFRESH_TOKEN: ${{secrets.STRAVA_REFRESH_TOKEN}}
+          MAPTILER_KEY: ${{secrets.MAPTILER_KEY}}
         run: |
           cd frontend
           npm ci
