@@ -5,6 +5,8 @@ const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const flatCache = require('flat-cache');
 const cache = flatCache.load('segments');
+const polyline = require('@mapbox/polyline');
+const osm = require('osm-static-maps');
 
 const generateStats = (segment) => {
   const counts = segment.counts.data;
@@ -92,6 +94,9 @@ const allSegmentData = async () => {
         segmentId
       );
       generateCounts(segment);
+      segment.polyline = polyline.toGeoJSON(segment.strava.map.polyline);
+      const map = await osm({ geojson: segment.polyline });
+      console.log(map);
       segment.stats = generateStats(segment);
       return segment;
     })
