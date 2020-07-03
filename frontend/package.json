@@ -32,7 +32,6 @@
     "graphql-tag": "^2.10.3",
     "journalize": "^2.4.0",
     "osm-static-maps": "^3.8.0",
-    "rxjs": "^6.6.0",
     "strava-client": "file:strava-client-3.0.0.tgz",
     "vega": "^5.13.0",
     "vega-lite": "^4.13.1"

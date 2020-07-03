@@ -29,7 +29,7 @@ const exists = (filename) => {
 };
 
 const downloadMap = async (segmentId) => {
-  console.log(`downloading ${segmentId}`);
+  console.log(`downloading image for ${segmentId}`);
   const storage = new Storage();
   const bucket = storage.bucket('segment-maps');
   await bucket.file(`map-${segmentId}.png`).download({
