@@ -15,11 +15,21 @@ description: Trail information based on Strava segment activity
     <meta property="og:description" content="{{description}}"/>
     <meta property="og:image" content="{{mapImage}}"/>
     <meta property="og:url" content="https://trails.steele.blue"/>
-    
+
     <meta name="twitter:card" content="summary" /> 
     <meta name="twitter:title" content="{{title}}"/> 
     <meta name="twitter:description" content="{{description}}" /> 
     <meta name="twitter:image" content="{{mapImage}}" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-30572618-4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-30572618-4');
+    </script>
+
   </head>
   <body>
     {{ content | safe }}
