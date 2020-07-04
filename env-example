@@ -1,0 +1,17 @@
+# Set these environment variables before running
+
+# strava
+export STRAVA_CLIENT_ID=
+export STRAVA_CLIENT_SECRET=
+export STRAVA_ACCESS_TOKEN=
+export STRAVA_REFRESH_TOKEN=
+export STRAVA_EXPIRY=
+
+# fauna
+export FAUNA_SECRET=
+
+# gcp
+export GOOGLE_APPLICATION_CREDENTIALS=
+
+# maptiler
+export MAPTILER_KEY=
