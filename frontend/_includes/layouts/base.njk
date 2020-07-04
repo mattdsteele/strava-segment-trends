@@ -1,5 +1,7 @@
 ---
 title: Omaha Trail Status
+mapImage: https://trails.steele.blue/images/map-1692340.png
+description: Trail information based on Strava segment activity
 ---
 <!doctype html>
 <html lang="en">
@@ -9,11 +11,15 @@ title: Omaha Trail Status
     <script type="module" src="https://unpkg.com/@github/time-elements@3.1.1/dist/time-elements.js"></script>
     <title>{{ title }}</title>
 
-    <meta property="og:title" content="{{title}}">
-    <meta property="og:description" content="Trail information based on Strava segment activity">
-    <meta property="og:image" content="https://trails.steele.blue/images/map-1692340.png">
-    <meta property="og:url" content="https://trails.steele.blue">
-    <meta name="twitter:card" content="Trail information based on Strava segment activity">
+    <meta property="og:title" content="{{title}}"/>
+    <meta property="og:description" content="{{description}}"/>
+    <meta property="og:image" content="{{mapImage}}"/>
+    <meta property="og:url" content="https://trails.steele.blue"/>
+    
+    <meta name="twitter:card" content="summary" /> 
+    <meta name="twitter:title" content="{{title}}"/> 
+    <meta name="twitter:description" content="{{description}}" /> 
+    <meta name="twitter:image" content="{{mapImage}}" />
   </head>
   <body>
     {{ content | safe }}
