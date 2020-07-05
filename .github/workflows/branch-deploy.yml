@@ -1,10 +1,9 @@
 name: Branch Preview Deploy
 on:
-  push:
-    paths:
-      - frontend/**
   pull_request:
     types: [opened, synchronize]
+    paths:
+      - frontend/**
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -49,6 +48,6 @@ jobs:
           enable-commit-comment: false
           overwrites-pull-request-comment: true
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.SITE }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE }}
         timeout-minutes: 1
