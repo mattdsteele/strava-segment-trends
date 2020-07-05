@@ -1,0 +1,54 @@
+name: Branch Preview Deploy
+on:
+  push:
+    paths:
+      - frontend/**
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '298.0.0'
+          service_account_key: ${{ secrets.GCLOUD_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCLOUD_PROJECT }}
+          export_default_credentials: true
+      - name: npm install, build
+        env:
+          FAUNA_SECRET: ${{secrets.FAUNA_SECRET}}
+          NETLIFY_ACCESS_TOKEN: ${{secrets.NETLIFY_ACCESS_TOKEN}}
+          NETLIFY_SITE: ${{secrets.NETLIFY_SITE}}
+          STRAVA_ACCESS_TOKEN: ${{secrets.STRAVA_ACCESS_TOKEN}}
+          STRAVA_CLIENT_ID: ${{secrets.STRAVA_CLIENT_ID}}
+          STRAVA_CLIENT_SECRET: ${{secrets.STRAVA_CLIENT_SECRET}}
+          STRAVA_EXPIRY: ${{secrets.STRAVA_EXPIRY}}
+          STRAVA_REFRESH_TOKEN: ${{secrets.STRAVA_REFRESH_TOKEN}}
+          MAPTILER_KEY: ${{secrets.MAPTILER_KEY}}
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+      - name: Preview Deploy
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: './frontend/_site'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: 'Deploy from GitHub Actions'
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.SITE }}
+        timeout-minutes: 1
