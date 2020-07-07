@@ -59,14 +59,20 @@ img {
 <header>
   <h1>Omaha Trail Segments</h1>
   <h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
+  <h4>Current temp: {{observations[0].data.properties.temperature.value}}</h4>
+  <h4>Station: {{observations[0].data.properties.stationId}}</h4>
+  <h4>Segments: {{observations[0].data.properties.segments}}</h4>
 </header>
-
 {% for segment in segments %}
 
 <div class="segment">
   <div class="title">
     <h2>{{segment.trail}} - {{segment.strava.name}} (<a href="https://www.strava.com/segments/{{segment.segmentId}}">{{segment.segmentId}}</a>)</h2>
   </div>
+  <section>
+    <label>Current Temperature</label>
+    <div></div>
+  </section>
   <section class="trail">
     <div class="map">
       <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy">
