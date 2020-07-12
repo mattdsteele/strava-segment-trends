@@ -80,25 +80,6 @@ const allSegmentData = async () => {
     undefined
   );
 
-  // add stations
-  segmentData.map(segment => {
-    segment.stationId = stations.find(station => {
-      return segment.segmentId === station.segmentId;
-    }).stationId;
-  });
-  console.log(segmentData);
-
-  // unique stations
-  const stat = new Set(
-    segmentData.map(segment => {
-      return segment.stationId
-    }));
-  stat.delete(null);
-  console.log([...stat]);
-  const obs = await observations([...stat]);
-  obs.forEach(o => console.log(o));
-  // console.log(obs);
-
   const augmentedSegmentData = await Promise.all(
     segmentData.map(async (segment) => {
       const { segmentId } = segment;
@@ -119,34 +100,48 @@ const allSegmentData = async () => {
       }
     })
   );
+
+  await addObservations(segmentData);
+
   saveCache();
   return augmentedSegmentData;
 };
 
-getAllObservations = async (segmentIds) => {
-  const stations = new Set();
+const addObservations = async (segmentData) => {
+  const uniqueStations = new Set();
 
-  segmentIds.map(id => {
-    const s2s = segment2station.find(s2s => s2s.segmentId === id);
-    s2s && stations.add(s2s.stationId);
-  });
+  for (const segment of segmentData) {
+    segment.stationId = stations.find(station => {
+      return segment.segmentId === station.segmentId;
+    }).stationId;
+    uniqueStations.add(segment.stationId);
+  }
 
-  return await observations(stations);
+  uniqueStations.delete(null);
+  const obs = await observations([...uniqueStations]);
+
+  for (const segment of segmentData) {
+    segment.observations = obs.find(o => {
+      return o.data.properties.stationId === segment.stationId;
+    }).data.properties;
+    delete segment.stationId;
+  }
 }
 
+// TODO: remove when adding stationId to data store
 const stations = [
-  { segmentId: 18804054, stationId: 'KOMA', trail: 'Lewis and Clark' },
-  { segmentId: 10815130, stationId: 'C8198', trail: 'Tranquility' },
-  { segmentId: 4481947, stationId: 'C8198', trail: 'Tranquility' },
-  { segmentId: 18808579, stationId: 'C8198', trail: 'Tranquility' },
-  { segmentId: 8417986, stationId: 'E7836', trail: 'Swanson' },
-  { segmentId: 799024, stationId: 'E7836', trail: 'Swanson' },
-  { segmentId: 1692340, stationId: 'D9161', trail: 'Jewell' },
-  { segmentId: 5904281, stationId: 'D9161', trail: 'Jewell' },
-  { segmentId: 5904382, stationId: 'D9161', trail: 'Jewell' },
-  { segmentId: 9729664, stationId: 'F2659', trail: 'Walnut Creek' },
-  { segmentId: 2843721, stationId: 'KFET', trail: 'Calvin Crest' },
-  { segmentId: 4646492, stationId: 'D3452', trail: 'Branched Oak' }
+  { segmentId: 18804054, stationId: 'KOMA' },
+  { segmentId: 10815130, stationId: 'C8198' },
+  { segmentId: 4481947, stationId: 'C8198' },
+  { segmentId: 18808579, stationId: 'C8198' },
+  { segmentId: 8417986, stationId: 'E7836' },
+  { segmentId: 799024, stationId: 'E7836' },
+  { segmentId: 1692340, stationId: 'D9161' },
+  { segmentId: 5904281, stationId: 'D9161' },
+  { segmentId: 5904382, stationId: 'D9161' },
+  { segmentId: 9729664, stationId: 'F2659' },
+  { segmentId: 2843721, stationId: 'KFET' },
+  { segmentId: 4646492, stationId: 'D3452' }
   // { segmentId: 0, stationId: 'E9007', trail: 'Platte' },
   // { segmentId: 0, stationId: 'E9007', trail: 'Oxbow' }
 ]

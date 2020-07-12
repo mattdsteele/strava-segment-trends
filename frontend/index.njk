@@ -14,6 +14,9 @@ body {
 header {
   text-align: center;
 }
+.weather {
+  padding: 0px;
+}
 .stat {
   font-size: 1.5em;
   display: flex;
@@ -22,16 +25,29 @@ header {
   margin: auto;
 }
 @media(min-width: 700px) {
+.title, .trail, .weather {
+  max-width: 1100px;
+}
 .trail {
   flex-direction: row;
   margin: auto;
-  max-width: 1100px;
   flex-order: normal;
 }
 .title {
   margin: auto;
-  max-width: 1100px;
   font-size: 1.3em;
+}
+.weather {
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+.weather li {
+  margin-right: 1.5rem;
 }
 .map {
   width: 35%;
@@ -61,28 +77,43 @@ img {
   <h4>Last updated: <relative-time datetime="{{stats.lastUpdated}}">{{stats.lastUpdated}}</relative-time></h4>
 </header>
 
-{# {% for obs in observations %}
-
-<h4>{{obs.data.properties.stationId}}</h4>
-<div>Temp: {{obs.data.properties.temperature.value | round}}</div>
-<div>Dewpoint: {{obs.data.properties.dewpoint.value | round}}</div>
-<div>Windspeed: {{obs.data.properties.windSpeed.value | round}}</div>
-<div>Windgust: {{obs.data.properties.windGust.value | round }}</div>
-<div>Direction: {{obs.data.properties.windDirection.value}}</div>
-<div>Rainfall: {{obs.data.properties.precipitationLast3hours.value}}</div>
-
-{% endfor %} #}
-
 {% for segment in segments %}
 
 <div class="segment">
   <div class="title">
     <h2>{{segment.trail}} - {{segment.strava.name}} (<a href="https://www.strava.com/segments/{{segment.segmentId}}">{{segment.segmentId}}</a>)</h2>
   </div>
-  <section>
-    <label>Current Temperature</label>
-    <div></div>
-  </section>
+  <ul class="weather">
+    <li>
+      <b>Current conditions</b> 
+    </li>
+    <li>
+      <span>
+        {{segment.observations.temperature.value | round}}&#176; | 
+        {{segment.observations.heatIndex.value | round}}&#176; heat index
+      </span>
+    </li>
+    <li>
+      <label>Humidity:<label/> 
+      <span>{{segment.observations.relativeHumidity.value | round}}%</span>
+    </li>
+    <li>
+      <label>Wind:</label>
+      <span>
+        {% if segment.observations.windDirection.value !== -1 %}
+          {{segment.observations.windDirection.value}} 
+        {% endif %}
+        {{segment.observations.windSpeed.value | round}} mph
+        {% if segment.observations.windGust.value %} 
+          gusting {{segment.observations.windGust.value | round}} mph
+        {% endif %}
+      </span>
+    </li>
+    <li>
+      <label>Rain:</label>
+      <span>{{segment.observations.precipitationLast3Hours.value}}" last 3 hours</span>
+    </li>
+  </ul>
   <section class="trail">
     <div class="map">
       <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy">
