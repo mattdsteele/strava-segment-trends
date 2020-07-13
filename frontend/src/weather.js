@@ -6,7 +6,7 @@ const observations = async stations => {
   const results = stations.map(async station => {
     return await axios.get(
       `https://api.weather.gov/stations/${station}/observations/latest`, {
-      transformResponse: data => { return transform(station, data) }
+      transformResponse: data => transform(station, data)
     });
   }, transform);
 

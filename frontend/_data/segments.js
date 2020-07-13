@@ -101,13 +101,13 @@ const allSegmentData = async () => {
     })
   );
 
-  await addObservations(segmentData);
+  await addWeatherObservations(segmentData);
 
   saveCache();
   return augmentedSegmentData;
 };
 
-const addObservations = async (segmentData) => {
+const addWeatherObservations = async (segmentData) => {
   const uniqueStations = new Set();
 
   for (const segment of segmentData) {
