@@ -112,10 +112,7 @@ const addWeatherObservations = async (segmentData) => {
   const uniqueStations = new Set();
 
   for (const segment of segmentData) {
-    segment.stationId = stations.find((station) => {
-      return segment.segmentId === station.segmentId;
-    }).stationId;
-    uniqueStations.add(segment.stationId);
+    uniqueStations.add(segment.weatherStationId);
   }
 
   uniqueStations.delete(null);
@@ -127,29 +124,10 @@ const addWeatherObservations = async (segmentData) => {
 
   for (const segment of segmentData) {
     segment.observations = obs.find((o) => {
-      return o.data.properties.stationId === segment.stationId;
+      return o.data.properties.stationId === segment.weatherStationId;
     }).data.properties;
-    delete segment.stationId;
   }
 };
-
-// TODO: remove when adding stationId to data store
-const stations = [
-  { segmentId: 18804054, stationId: 'KOMA' },
-  { segmentId: 10815130, stationId: 'C8198' },
-  { segmentId: 4481947, stationId: 'C8198' },
-  { segmentId: 18808579, stationId: 'C8198' },
-  { segmentId: 8417986, stationId: 'E7836' },
-  { segmentId: 799024, stationId: 'E7836' },
-  { segmentId: 1692340, stationId: 'D9161' },
-  { segmentId: 5904281, stationId: 'D9161' },
-  { segmentId: 5904382, stationId: 'D9161' },
-  { segmentId: 9729664, stationId: 'F2659' },
-  { segmentId: 2843721, stationId: 'KFET' },
-  { segmentId: 4646492, stationId: 'D3452' },
-  // { segmentId: 0, stationId: 'E9007', trail: 'Platte' },
-  // { segmentId: 0, stationId: 'E9007', trail: 'Oxbow' }
-];
 
 module.exports = async () => {
   return await allSegmentData();

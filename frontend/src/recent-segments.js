@@ -9,6 +9,7 @@ const q = gql`
       data {
         segmentId
         trail
+        weatherStationId
         counts(_size: 1000) {
           data {
             athleteCount
