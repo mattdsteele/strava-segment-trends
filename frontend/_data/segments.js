@@ -5,6 +5,7 @@ const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const { saveMap, exists, generateMap, downloadMap } = require('../src/maps');
 const { checkOrGet, saveCache } = require('../src/cache');
+const { observations } = require('../src/weather');
 
 const generateStats = (segment) => {
   const counts = segment.counts.data;
@@ -78,6 +79,7 @@ const allSegmentData = async () => {
     async () => await allSegments(),
     undefined
   );
+
   const augmentedSegmentData = await Promise.all(
     segmentData.map(async (segment) => {
       const { segmentId } = segment;
@@ -91,6 +93,7 @@ const allSegmentData = async () => {
       return segment;
     })
   );
+
   await Promise.all(
     augmentedSegmentData.map(async ({ segmentId }) => {
       if (!exists(`images/map-${segmentId}.png`)) {
@@ -98,8 +101,32 @@ const allSegmentData = async () => {
       }
     })
   );
+
+  await addWeatherObservations(segmentData);
+
   saveCache();
   return augmentedSegmentData;
+};
+
+const addWeatherObservations = async (segmentData) => {
+  const uniqueStations = new Set();
+
+  for (const segment of segmentData) {
+    uniqueStations.add(segment.weatherStationId);
+  }
+
+  uniqueStations.delete(null);
+  const obs = await checkOrGet(
+    'weatherObservations',
+    async () => observations([...uniqueStations]),
+    undefined
+  );
+
+  for (const segment of segmentData) {
+    segment.observations = obs.find((o) => {
+      return o.data.properties.stationId === segment.weatherStationId;
+    }).data.properties;
+  }
 };
 
 module.exports = async () => {

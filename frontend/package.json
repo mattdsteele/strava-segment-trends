@@ -25,6 +25,7 @@
     "@types/node": "^14.0.14",
     "axios-auth-refresh": "^2.2.7",
     "axios-debug-log": "^0.7.0",
+    "convert-units": "^2.3.4",
     "del-cli": "^3.0.1",
     "flat-cache": "^2.0.1",
     "graphql": "^15.1.0",
@@ -36,5 +37,7 @@
     "vega": "^5.13.0",
     "vega-lite": "^4.13.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "degrees-to-direction": "^1.1.1"
+  }
 }
