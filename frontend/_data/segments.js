@@ -93,6 +93,7 @@ const allSegmentData = async () => {
       return segment;
     })
   );
+
   await Promise.all(
     augmentedSegmentData.map(async ({ segmentId }) => {
       if (!exists(`images/map-${segmentId}.png`)) {
@@ -111,22 +112,26 @@ const addWeatherObservations = async (segmentData) => {
   const uniqueStations = new Set();
 
   for (const segment of segmentData) {
-    segment.stationId = stations.find(station => {
+    segment.stationId = stations.find((station) => {
       return segment.segmentId === station.segmentId;
     }).stationId;
     uniqueStations.add(segment.stationId);
   }
 
   uniqueStations.delete(null);
-  const obs = await observations([...uniqueStations]);
+  const obs = await checkOrGet(
+    'weatherObservations',
+    async () => observations([...uniqueStations]),
+    undefined
+  );
 
   for (const segment of segmentData) {
-    segment.observations = obs.find(o => {
+    segment.observations = obs.find((o) => {
       return o.data.properties.stationId === segment.stationId;
     }).data.properties;
     delete segment.stationId;
   }
-}
+};
 
 // TODO: remove when adding stationId to data store
 const stations = [
@@ -141,10 +146,10 @@ const stations = [
   { segmentId: 5904382, stationId: 'D9161' },
   { segmentId: 9729664, stationId: 'F2659' },
   { segmentId: 2843721, stationId: 'KFET' },
-  { segmentId: 4646492, stationId: 'D3452' }
+  { segmentId: 4646492, stationId: 'D3452' },
   // { segmentId: 0, stationId: 'E9007', trail: 'Platte' },
   // { segmentId: 0, stationId: 'E9007', trail: 'Oxbow' }
-]
+];
 
 module.exports = async () => {
   return await allSegmentData();
