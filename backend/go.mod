@@ -3,6 +3,7 @@ module github.com/mattdsteele/strava-segment-trends
 go 1.13
 
 require (
+	github.com/go-delve/delve v1.4.1 // indirect
 	github.com/machinebox/graphql v0.2.2
 	github.com/matryer/is v1.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

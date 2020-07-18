@@ -15,3 +15,6 @@ export GOOGLE_APPLICATION_CREDENTIALS=
 
 # maptiler
 export MAPTILER_KEY=
+
+# mapbox
+export MAPBOX_ACCESS_TOKEN=

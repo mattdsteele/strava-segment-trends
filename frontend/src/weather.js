@@ -29,7 +29,6 @@ const transform = (station, data) => {
     d2d(d.properties.windDirection.value);
   d.properties.precipitationLast3Hours.value =
     convert(d.properties.precipitationLast3Hours.value).from('m').to('in');
-
   return d;
 }
 

@@ -9,13 +9,33 @@ import (
 	"time"
 
 	trends "github.com/mattdsteele/strava-segment-trends"
-	strava "github.com/strava/go.strava"
 )
 
 type mapRequestData = struct {
 	url      string
 	token    string
-	polyline strava.Polyline
+	polyline string
+}
+
+type mapParameters = struct {
+	// username    string
+	// styleID     string
+	overlay string // don't need in db
+	lon     float32
+	lat     float32
+	zoom    int8
+	auto    bool
+	width   int16
+	height  int16
+	bearing int16
+	pitch   int8
+	// largeScale  bool
+	// attribution bool
+	// logo        bool
+	// beforeLayer string
+	setfilter []string
+	layerID   string
+	// addLayer	object
 }
 
 func main() {
@@ -28,7 +48,7 @@ func main() {
 	}
 
 	for _, id := range segmentIDs {
-		mapData.polyline = stravaClient.Stats(int64(id)).Map.Polyline
+		mapData.polyline = string(stravaClient.Stats(int64(id)).Map.Polyline)
 		createStaticMap(id, mapData)
 	}
 }
