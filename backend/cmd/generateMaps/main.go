@@ -11,45 +11,58 @@ import (
 	trends "github.com/mattdsteele/strava-segment-trends"
 )
 
-type mapRequestData = struct {
-	url      string
-	token    string
-	polyline string
+const (
+	mapBoxURL = "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/%s/auto/300x200?logo=false&access_token=%s"
+)
+
+// need overlay interface for types path, geojson, marker, style, etc
+// single function for formatting url
+// pass array of overlays to createStaticMap and have it call func on each
+
+type pathOverlay struct {
+	strokeWidth   float32
+	strokeColor   string
+	strokeOpacity float32
+	polyline      string
 }
 
-type mapParameters = struct {
-	// username    string
-	// styleID     string
-	overlay string // don't need in db
-	lon     float32
-	lat     float32
-	zoom    int8
-	auto    bool
-	width   int16
-	height  int16
-	bearing int16
-	pitch   int8
-	// largeScale  bool
-	// attribution bool
-	// logo        bool
-	// beforeLayer string
-	setfilter []string
-	layerID   string
-	// addLayer	object
+// path-{strokeWidth}+{strokeColor}-{strokeOpacity}+{fillColor}-{fillOpacity}({polyline})
+func (p *pathOverlay) Format() (s string) {
+	s = "path"
+
+	if p.strokeWidth != 0.0 {
+		s += fmt.Sprintf("-%.1f", p.strokeWidth)
+	}
+	if p.strokeColor != "" {
+		s += fmt.Sprintf("+%s", p.strokeColor)
+	}
+	if p.strokeOpacity != 0.0 {
+		s += fmt.Sprintf("-%.1f", p.strokeOpacity)
+	}
+	if p.polyline != "" {
+		encoded := url.QueryEscape(string(p.polyline))
+		s += fmt.Sprintf("(%s)", encoded)
+	}
+	return
 }
 
 func main() {
-	stravaClient := createStravaClient()
-	segmentIDs := getStravaSegmentIDs()
+	segmentIDs := []int{1692340}
+	//segmentIDs := getStravaSegmentIDs()
+	generateMaps(segmentIDs)
+}
 
-	mapData := mapRequestData{
-		url:   "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/path(%s)/auto/300x200?logo=false&access_token=%s",
-		token: os.Getenv("MAPBOX_ACCESS_TOKEN"),
-	}
+func generateMaps(segmentIDs []int) {
+	stravaClient := createStravaClient()
+	overlay := pathOverlay{strokeWidth: 2, strokeColor: "f00"}
 
 	for _, id := range segmentIDs {
-		mapData.polyline = string(stravaClient.Stats(int64(id)).Map.Polyline)
-		createStaticMap(id, mapData)
+		overlay.polyline = string(stravaClient.Stats(int64(id)).Map.Polyline)
+		path := overlay.Format()
+		url := fmt.Sprintf(mapBoxURL, path, os.Getenv("MAPBOX_ACCESS_TOKEN"))
+		fmt.Println(url)
+		fileName := fmt.Sprintf("map-%d.png", id)
+		createStaticMap(url, fileName)
 	}
 }
 
@@ -75,17 +88,11 @@ func getStravaSegmentIDs() []int {
 	return segmentIds
 }
 
-func createStaticMap(segmentID int, data mapRequestData) {
-	urlEncodedLine := url.QueryEscape(string(data.polyline))
-	url := fmt.Sprintf(data.url, urlEncodedLine, data.token)
-
-	fmt.Println(url)
-
+func createStaticMap(url string, fileName string) {
 	resp, err := http.Get(url)
 	checkError(err)
 	defer resp.Body.Close()
 
-	fileName := fmt.Sprintf("map-%d.png", segmentID)
 	file := createFile(&fileName)
 
 	_, err = io.Copy(file, resp.Body)

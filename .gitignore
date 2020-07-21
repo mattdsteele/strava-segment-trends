@@ -1,3 +1,5 @@
 *.env*
 apollo.config.js
 .history
+*.exe
+*.exe~
