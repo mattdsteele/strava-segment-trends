@@ -12,12 +12,10 @@ import (
 )
 
 const (
-	mapBoxURL = "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/%s/auto/300x200?logo=false&access_token=%s"
+	mapBoxURL    = "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/%s/auto/800x600?logo=false&setfilter=['==','0','1']&layer_id=road-path-bg&access_token=%s"
+	segmentColor = "f00"
+	segmentWidth = 3
 )
-
-// need overlay interface for types path, geojson, marker, style, etc
-// single function for formatting url
-// pass array of overlays to createStaticMap and have it call func on each
 
 type pathOverlay struct {
 	strokeWidth   float32
@@ -26,8 +24,7 @@ type pathOverlay struct {
 	polyline      string
 }
 
-// path-{strokeWidth}+{strokeColor}-{strokeOpacity}+{fillColor}-{fillOpacity}({polyline})
-func (p *pathOverlay) Format() (s string) {
+func (p *pathOverlay) urlParameter() (s string) {
 	s = "path"
 
 	if p.strokeWidth != 0.0 {
@@ -47,20 +44,24 @@ func (p *pathOverlay) Format() (s string) {
 }
 
 func main() {
-	segmentIDs := []int{1692340}
-	//segmentIDs := getStravaSegmentIDs()
+	segmentIDs := getStravaSegmentIDs()
+	// segmentIDs := []int{1692340}
 	generateMaps(segmentIDs)
 }
 
 func generateMaps(segmentIDs []int) {
 	stravaClient := createStravaClient()
-	overlay := pathOverlay{strokeWidth: 2, strokeColor: "f00"}
+	overlay := pathOverlay{strokeWidth: segmentWidth, strokeColor: segmentColor}
+	mapBoxToken := os.Getenv("MAPBOX_ACCESS_TOKEN")
 
 	for _, id := range segmentIDs {
 		overlay.polyline = string(stravaClient.Stats(int64(id)).Map.Polyline)
-		path := overlay.Format()
-		url := fmt.Sprintf(mapBoxURL, path, os.Getenv("MAPBOX_ACCESS_TOKEN"))
+		overlayParam := overlay.urlParameter()
+
+		url := fmt.Sprintf(mapBoxURL, overlayParam, mapBoxToken)
+
 		fmt.Println(url)
+
 		fileName := fmt.Sprintf("map-%d.png", id)
 		createStaticMap(url, fileName)
 	}
