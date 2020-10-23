@@ -4,7 +4,7 @@ Keep track of trail activity by analyzing Strava segment usage.
 
 ## Contributing
 
-See `README` in corresponding projects
+See `README` in corresponding projects.
 
 ## Colophon
 
