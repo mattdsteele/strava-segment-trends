@@ -11,13 +11,15 @@ const db = new Firestore({
 
 const q = gql`
 query ($size: Int!, $cursor: String) {
-  allSegments(_size: $size, _cursor: $cursor) {
+  allCounts(_size: $size, _cursor: $cursor) {
     after
     data {
-      trail
-      segmentId
-      weatherStationId
-      sport
+      effortCount
+      ts
+      athleteCount
+      segment {
+        segmentId
+      }
     }
   }
 }
@@ -36,17 +38,20 @@ query ($size: Int!, $cursor: String) {
   let users = [];
   while (true) {
     const response = await client.request(q, {
-      size: 2,
+      size: 100,
       cursor: nextCursor,
     });
-    const { allSegments } = response;
-    const { after, data } = allSegments;
+    const { allCounts } = response;
+    const { after, data } = allCounts;
     users = [...data, ...users];
     nextCursor = after;
 
     await Promise.all(
       data.map(async (d) => {
-        const newDoc = await db.collection("segments").doc();
+        d.segmentId = d.segment.segmentId;
+        delete d.segment;
+        d.ts = new Date(d.ts);
+        const newDoc = await db.collection("counts").doc();
         await newDoc.set(d);
       })
     );
