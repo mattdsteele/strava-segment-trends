@@ -38,6 +38,7 @@
     "vega-lite": "^4.13.1"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^4.8.1",
     "degrees-to-direction": "^1.1.1"
   }
 }

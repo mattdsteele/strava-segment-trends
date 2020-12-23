@@ -10,7 +10,7 @@ const vegaLite = require('vega-lite');
 const statsForSegment = (segment) => {
   const omaha = ZoneId.of('America/Chicago');
   const today = ZonedDateTime.now(omaha).toLocalDate();
-  const dataStats = segment.counts.data
+  const dataStats = segment.counts
     .filter((t) => t.efforts > 0)
     .map(({ ts, efforts }) => {
       const zdt = ZonedDateTime.parse(ts)

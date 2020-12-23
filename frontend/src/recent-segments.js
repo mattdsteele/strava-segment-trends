@@ -1,35 +1,39 @@
-const gql = require('graphql-tag');
-const { print } = require('graphql');
-const { GraphQLClient } = require('graphql-request');
-const { env } = require('process');
+const { LocalDateTime, convert, ZoneId } = require("@js-joda/core");
 
-const q = gql`
-  query foo {
-    allSegments {
-      data {
-        segmentId
-        trail
-        weatherStationId
-        counts(_size: 1000) {
-          data {
-            athleteCount
-            effortCount
-            ts
-          }
-        }
-      }
-    }
-  }
-`;
+const Firestore = require("@google-cloud/firestore");
+const db = new Firestore({ projectId: "secret-strava" });
+const firebaseAllSegments = async () => {
+  const omaha = ZoneId.of("America/Chicago");
+  const today = LocalDateTime.now(omaha);
+  const startDateTime = today.minusDays(30);
+  const startDate = convert(startDateTime).toDate();
+  const segments = await db.collection("segments").get();
 
-const endpoint = 'https://graphql.fauna.com/graphql';
-const client = new GraphQLClient(endpoint, {
-  headers: {
-    authorization: `Bearer ${env.FAUNA_SECRET}`,
-  },
-});
-module.exports.allSegments = async () => {
-  res = await client.request(print(q));
-  const data = res.allSegments.data;
-  return data;
+  const addRecentCounts = async (segment) => {
+    const countsRef = db.collection("counts");
+    const counts = [];
+    const segmentCountsRef = await countsRef
+      .where("segmentId", "==", segment.segmentId)
+      .where("ts", ">", startDate)
+      .get();
+
+    // munge to fit closer to graphql structure
+    segmentCountsRef.forEach((countRef) => {
+      const count = countRef.data();
+      count.ts = count.ts.toDate().toISOString();
+      counts.push(count);
+    });
+    segment.counts = counts;
+    return segment;
+  };
+
+  const segmentPromises = [];
+  segments.forEach((segmentRef) => {
+    const segment = segmentRef.data();
+    segmentPromises.push(addRecentCounts(segment));
+  });
+  return Promise.all(segmentPromises).then((segments) => {
+    return segments;
+  });
 };
+module.exports.allSegments = firebaseAllSegments;

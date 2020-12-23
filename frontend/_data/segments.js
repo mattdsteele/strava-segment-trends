@@ -8,7 +8,7 @@ const { checkOrGet, saveCache } = require('../src/cache');
 const { observations } = require('../src/weather');
 
 const generateStats = (segment) => {
-  const counts = segment.counts.data;
+  const counts = segment.counts;
   const lastEffort = counts[counts.length - 1];
 
   const omaha = ZoneId.of('America/Chicago');

@@ -49,7 +49,7 @@ const stravaData = async (segmentId) => {
 };
 
 const generateCounts = (segment) => {
-  const data = segment.counts.data;
+  const data = segment.counts;
   data.forEach((c, i) => {
     if (i > 0) {
       const prevCount = data[i - 1].effortCount;
