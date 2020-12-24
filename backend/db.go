@@ -14,7 +14,13 @@ type Db struct {
 	ctx    *context.Context
 }
 
-func InitDb(faunaSecret string) *Db {
+type Store interface {
+	AllSegmentIds() (ids []int)
+	GetSegment(segmentId int) Segment
+	AddCount(segmentId, athleteCount, effortCount int) *Count
+}
+
+func InitDb(faunaSecret string) Store {
 	db := new(Db)
 	db.make(faunaSecret)
 	return db
@@ -47,10 +53,11 @@ mutation($segmentId:Int!) {
 `
 
 type Count struct {
-	Id       string `json:"_id"`
-	Ts       string `json:"ts"`
-	Efforts  int    `json:"effortCount"`
-	Athletes int    `json:"athleteCount"`
+	Id        string `json:"_id" firestore:"id,omitempty"`
+	Ts        string `json:"ts" firestore:"ts"`
+	Efforts   int    `json:"effortCount" firestore:"effortCount"`
+	Athletes  int    `json:"athleteCount" firestore:"athleteCount"`
+	SegmentId int    `firestore:"segmentId"`
 }
 type CountWrapper struct {
 	Data []Count `json: "data"`

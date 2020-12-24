@@ -7,7 +7,7 @@ import (
 
 type Trends struct {
 	Strava *Strava
-	Db     *Db
+	Db     Store
 }
 
 func (t *Trends) Populate() {

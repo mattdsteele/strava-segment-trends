@@ -22,7 +22,8 @@ func main() {
 		ClientId:     os.Getenv("STRAVA_CLIENT_ID"),
 		ClientSecret: os.Getenv("STRAVA_CLIENT_SECRET"),
 	})
-	db := trends.InitDb(faunaSecret)
+	var db trends.Store
+	db = trends.InitDb(faunaSecret)
 
 	t := &trends.Trends{
 		Strava: strava,
