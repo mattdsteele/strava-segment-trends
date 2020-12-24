@@ -75,3 +75,6 @@ func (f *Firestore) AddCount(segmentId, athleteCount, effortCount int) *Count {
 	}
 	return &count
 }
+func (f *Firestore) CreateSegment(segment Segment) {
+	panic("not implemented yet")
+}

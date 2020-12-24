@@ -14,12 +14,6 @@ type Db struct {
 	ctx    *context.Context
 }
 
-type Store interface {
-	AllSegmentIds() (ids []int)
-	GetSegment(segmentId int) Segment
-	AddCount(segmentId, athleteCount, effortCount int) *Count
-}
-
 func InitDb(faunaSecret string) Store {
 	db := new(Db)
 	db.make(faunaSecret)
@@ -71,7 +65,10 @@ type CreateSegmentMutation struct {
 	CreateSegment Segment `json:"createSegment"`
 }
 
-func (d Db) CreateSegment(segmentId int) CreateSegmentMutation {
+func (d Db) CreateSegment(segment Segment) {
+	d.createSegment(segment.SegmentId)
+}
+func (d Db) createSegment(segmentId int) CreateSegmentMutation {
 	req := graphql.NewRequest(mutationReq)
 	req.Var("segmentId", segmentId)
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", d.secret))

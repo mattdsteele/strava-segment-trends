@@ -12,7 +12,10 @@ func main() {
 	db := trends.InitDb(faunaSecret)
 	segments := []int{8417986, 799024, 9729664, 18804054, 2843721}
 	for _, segment := range segments {
-		s := db.CreateSegment(segment)
-		fmt.Printf("created segment %d\n", s.CreateSegment.SegmentId)
+		s := trends.Segment{
+			SegmentId: segment,
+		}
+		db.CreateSegment(s)
+		fmt.Printf("created segment %d\n", s.SegmentId)
 	}
 }
