@@ -62,6 +62,20 @@ func (f *Firestore) GetSegment(segmentId int) Segment {
 	return s
 }
 func (f *Firestore) AddCount(segmentId, athleteCount, effortCount int) *Count {
+	latestQ := f.client.Collection("counts").Where("segmentId", "==", segmentId).OrderBy("ts", firestore.Desc).Limit(1)
+	latest, err := latestQ.Documents(f.ctx).GetAll()
+	if err != nil {
+		panic(err)
+	}
+	if len(latest) > 0 {
+		var latestCount Count
+		latest[0].DataTo(&latestCount)
+		if latestCount.Efforts == effortCount {
+			fmt.Printf("same efforts for segment %d as before (%d)\n", segmentId, effortCount)
+			return nil
+		}
+	}
+
 	now := time.Now().UTC().Format(time.RFC3339)
 	count := Count{
 		Ts:        now,
@@ -69,7 +83,7 @@ func (f *Firestore) AddCount(segmentId, athleteCount, effortCount int) *Count {
 		SegmentId: segmentId,
 		Efforts:   effortCount,
 	}
-	_, _, err := f.client.Collection("counts").Add(f.ctx, count)
+	_, _, err = f.client.Collection("counts").Add(f.ctx, count)
 	if err != nil {
 		log.Fatalf("Failed to create count: %v", err)
 	}
