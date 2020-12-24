@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"time"
@@ -9,7 +10,6 @@ import (
 )
 
 func main() {
-	faunaSecret := os.Getenv("FAUNA_SECRET")
 	stravaAccessToken := os.Getenv("STRAVA_ACCESS_TOKEN")
 	stravaRefreshToken := os.Getenv("STRAVA_REFRESH_TOKEN")
 	stravaExpiryStr := os.Getenv("STRAVA_EXPIRY")
@@ -23,7 +23,7 @@ func main() {
 		ClientSecret: os.Getenv("STRAVA_CLIENT_SECRET"),
 	})
 	var db trends.Store
-	db = trends.InitDb(faunaSecret)
+	db = trends.InitFirestore(context.Background())
 
 	t := &trends.Trends{
 		Strava: strava,
