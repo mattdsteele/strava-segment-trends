@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.8.1",
-    "degrees-to-direction": "^1.1.1"
+    "degrees-to-direction": "^1.1.1",
+    "puppeteer": "^13.5.1"
   }
 }
