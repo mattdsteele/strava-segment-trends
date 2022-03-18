@@ -11,6 +11,8 @@ env:
   PROJECT_ID: ${{ secrets.GCLOUD_PROJECT }}
   RUN_REGION: us-central1
   SERVICE_NAME: populate-trends
+  ENTRY_POINT: GetLatestTrends
+  TRIGGER_RESOURCE: tj-trends
 
 jobs:
   setup-build-deploy:
@@ -35,9 +37,9 @@ jobs:
     - name: 'deploy function'
       uses: 'google-github-actions/deploy-cloud-functions@v0'
       with:
-        name: '${{ $SERVICE_NAME }}'
+        name: '$SERVICE_NAME'
         runtime: 'go116'
-        entry_point: 'GetLatestTrends'
+        entry_point: '$ENTRY_POINT'
         trigger_type: 'topic'
-        trigger_resource: 'tj-trends'
+        trigger_resource: '$TRIGGER_RESOURCE'
         source_dir: 'backend'
