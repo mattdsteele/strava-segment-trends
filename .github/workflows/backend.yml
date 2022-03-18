@@ -1,6 +1,8 @@
 name: Build and Deploy to Cloud Function
 
 on:
+  workflow_dispatch:
+    branches: [main]
   push:
     paths:
       - backend/**
