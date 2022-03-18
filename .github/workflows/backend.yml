@@ -41,7 +41,7 @@ jobs:
       with:
         name: "${{ env.SERVICE_NAME }}"
         runtime: 'go116'
-        entry_point: "$env.ENTRY_POINT"
+        entry_point: "${{ env.ENTRY_POINT }}"
         event_trigger_type: 'google.pubsub.topic.publish'
         event_trigger_resource: "${{ env.TRIGGER_RESOURCE }}"
         source_dir: 'backend'
