@@ -35,9 +35,6 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.GCLOUD_PROJECT }}
-    # check env
-    - name: 'check env'
-      run: env
     # Deploy image to Cloud Run
     - name: 'deploy function'
       uses: 'google-github-actions/deploy-cloud-functions@v0'
