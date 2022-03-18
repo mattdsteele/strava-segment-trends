@@ -37,9 +37,9 @@ jobs:
     - name: 'deploy function'
       uses: 'google-github-actions/deploy-cloud-functions@v0'
       with:
-        name: '$SERVICE_NAME'
+        name: $SERVICE_NAME
         runtime: 'go116'
-        entry_point: '$ENTRY_POINT'
+        entry_point: "$ENTRY_POINT"
         trigger_type: 'topic'
-        trigger_resource: '$TRIGGER_RESOURCE'
+        trigger_resource: '${{ env.TRIGGER_RESOURCE }}'
         source_dir: 'backend'
