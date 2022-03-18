@@ -14,7 +14,7 @@ env:
   RUN_REGION: us-central1
   SERVICE_NAME: populate-trends
   ENTRY_POINT: GetLatestTrends
-  TRIGGER_RESOURCE: tj-trends
+  TRIGGER_RESOURCE: projects/secret-strava/topics/tj-trends
 
 jobs:
   setup-build-deploy:
