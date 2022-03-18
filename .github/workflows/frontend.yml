@@ -1,6 +1,8 @@
 name: Netlify Deploy
 
 on:
+  workflow_dispatch:
+    branches: [main]
   push:
     paths:
       - frontend/**
@@ -16,10 +18,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js 14
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
