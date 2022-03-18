@@ -32,12 +32,12 @@ jobs:
       with:
         project_id: ${{ secrets.GCLOUD_PROJECT }}
     # Deploy image to Cloud Run
-    - name: 'Use gcloud CLI'
-      run: 'gcloud info'
-    - name: Deploy
-      run: |-
-        gcloud functions deploy "$SERVICE_NAME" \
-          --trigger-topic tj-trends \
-          --runtime go113 \
-          --entry-point GetLatestTrends \
-          --source backend
+    - name: 'deploy function'
+      uses: 'google-github-actions/deploy-cloud-functions@v0'
+      with:
+        name: '${{ $SERVICE_NAME }}'
+        runtime: 'go116'
+        entry_point: 'GetLatestTrends'
+        trigger_type: 'topic'
+        trigger_resource: 'tj-trends'
+        source_dir: 'backend'
