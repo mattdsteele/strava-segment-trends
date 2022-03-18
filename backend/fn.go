@@ -7,7 +7,7 @@ import (
 )
 
 // Message is the payload of a Pub/Sub event. Please refer to the docs for
-// additional information regarding Pub/Sub events
+// additional information regarding Pub/Sub events.
 type Message struct {
 	Data []byte `json:"data"`
 }
