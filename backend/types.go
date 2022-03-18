@@ -1,5 +1,7 @@
 package trends
 
+import "time"
+
 type Store interface {
 	AllSegmentIds() (ids []int)
 	GetSegment(segmentId int) Segment
@@ -8,11 +10,11 @@ type Store interface {
 }
 
 type Count struct {
-	Id        string `json:"_id" firestore:"id,omitempty"`
-	Ts        string `json:"ts" firestore:"ts"`
-	Efforts   int    `json:"effortCount" firestore:"effortCount"`
-	Athletes  int    `json:"athleteCount" firestore:"athleteCount"`
-	SegmentId int    `firestore:"segmentId"`
+	Id        string    `json:"_id" firestore:"id,omitempty"`
+	Ts        time.Time `json:"ts" firestore:"ts"`
+	Efforts   int       `json:"effortCount" firestore:"effortCount"`
+	Athletes  int       `json:"athleteCount" firestore:"athleteCount"`
+	SegmentId int       `firestore:"segmentId"`
 }
 type CountWrapper struct {
 	Data []Count `json: "data"`

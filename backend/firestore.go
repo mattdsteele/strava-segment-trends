@@ -76,7 +76,7 @@ func (f *Firestore) AddCount(segmentId, athleteCount, effortCount int) *Count {
 		}
 	}
 
-	now := time.Now().UTC().Format(time.RFC3339)
+	now := time.Now().UTC()
 	count := Count{
 		Ts:        now,
 		Athletes:  athleteCount,
