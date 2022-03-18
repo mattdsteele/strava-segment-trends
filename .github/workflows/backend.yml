@@ -43,10 +43,10 @@ jobs:
         runtime: 'go116'
         entry_point: "${{ env.ENTRY_POINT }}"
         secret_environment_variables: |-
-          STRAVA_CLIENT_ID=projects/192788813135/secrets/STRAVA_CLIENT_ID/versions/latest,
-          STRAVA_CLIENT_SECRET=projects/192788813135/secrets/STRAVA_CLIENT_SECRET/versions/latest,
-          STRAVA_ACCESS_TOKEN=projects/192788813135/secrets/STRAVA_ACCESS_TOKEN/versions/latest,
-          STRAVA_REFRESH_TOKEN=projects/192788813135/secrets/STRAVA_REFRESH_TOKEN/versions/latest
+          STRAVA_CLIENT_ID=projects/192788813135/secrets/STRAVA_CLIENT_ID,
+          STRAVA_CLIENT_SECRET=projects/192788813135/secrets/STRAVA_CLIENT_SECRET,
+          STRAVA_ACCESS_TOKEN=projects/192788813135/secrets/STRAVA_ACCESS_TOKEN,
+          STRAVA_REFRESH_TOKEN=projects/192788813135/secrets/STRAVA_REFRESH_TOKEN
         event_trigger_type: 'google.pubsub.topic.publish'
         event_trigger_resource: "${{ env.TRIGGER_RESOURCE }}"
         source_dir: 'backend'
