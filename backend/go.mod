@@ -1,6 +1,6 @@
 module github.com/mattdsteele/strava-segment-trends
 
-go 1.13
+go 1.16
 
 require (
 	cloud.google.com/go/firestore v1.4.0

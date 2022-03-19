@@ -46,7 +46,8 @@ jobs:
           STRAVA_CLIENT_ID=projects/secret-strava/secrets/STRAVA_CLIENT_ID,
           STRAVA_CLIENT_SECRET=projects/secret-strava/secrets/STRAVA_CLIENT_SECRET,
           STRAVA_ACCESS_TOKEN=projects/secret-strava/secrets/STRAVA_ACCESS_TOKEN,
-          STRAVA_REFRESH_TOKEN=projects/secret-strava/secrets/STRAVA_REFRESH_TOKEN
+          STRAVA_REFRESH_TOKEN=projects/secret-strava/secrets/STRAVA_REFRESH_TOKEN,
+          STRAVA_EXPIRY=projects/secret-strava/secrets/STRAVA_EXPIRY
         event_trigger_type: 'google.pubsub.topic.publish'
         event_trigger_resource: "${{ env.TRIGGER_RESOURCE }}"
         source_dir: 'backend'
