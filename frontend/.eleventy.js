@@ -11,7 +11,6 @@ module.exports = (eleventyConfig) => {
       .format(DateTimeFormatter.ofPattern('MM/dd ha').withLocale(Locale.US));
     return z;
   });
-  // eleventyConfig.addNunjucksAsyncShortcode('showchart', renderHeatmap);
   eleventyConfig.addNunjucksAsyncShortcode('charturi', async (segment, chartType) => {
     const mappings = {
       calendar: renderCalendar,
