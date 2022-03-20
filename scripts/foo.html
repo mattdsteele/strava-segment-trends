@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Embedding Vega-Lite</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.22.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.2"></script>
+</head>
+
+<body>
+    <div>
+        <div id="vis1"></div>
+    </div>
+    <div>
+        <div id="vis2"></div>
+    </div>
+
+    <script type="text/javascript">
+        var vis1 = {
+            width: 400,
+            height: 300,
+            $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+            description: "A simple bar chart with embedded data.",
+            data: { url: "entries.csv", format: "csv" },
+            mark: "bar",
+            encoding: {
+                x: { field: "date", timeUnit: "day", type: "ordinal", title: "Day" },
+                y: {
+                    field: "date",
+                    timeUnit: "month",
+                    type: "ordinal",
+                    title: "Month",
+                    sort: {
+                        field: "date",
+                    },
+                },
+                color: {
+                    field: "count",
+                    aggregate: "sum",
+                    type: "quantitative",
+                    legend: null,
+                },
+            },
+        };
+        var vis2 = {
+            width: 400,
+            height: 100,
+            $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+            description: "A simple bar chart with embedded data.",
+            data: { url: "entries-last-week.csv", format: "csv" },
+            mark: "bar",
+            encoding: {
+                x: { field: "date", type: 'ordinal', title: "Day",
+            },
+                y: {
+                    field: "count",
+                    aggregate: 'sum',
+                    title: 'Rides'
+                },
+            },
+        };
+        vegaEmbed("#vis1", vis1);
+        vegaEmbed("#vis2", vis2, {actions: false});
+    </script>
+</body>
+
+</html>

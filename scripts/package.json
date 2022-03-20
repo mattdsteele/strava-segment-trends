@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/firestore": "^5",
+    "@js-temporal/polyfill": "^0.4.0",
     "graphql": "^15.4.0",
     "graphql-request": "^3.4.0",
     "graphql-tag": "^2.11.0"
