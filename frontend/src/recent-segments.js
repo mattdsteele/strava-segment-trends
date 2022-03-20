@@ -33,6 +33,7 @@ const firebaseAllSegments = async () => {
     segmentPromises.push(addRecentCounts(segment));
   });
   return Promise.all(segmentPromises).then((segments) => {
+    segments.sort((a, b) => a.trail < b.trail ? -1 : 1);
     return segments;
   });
 };
