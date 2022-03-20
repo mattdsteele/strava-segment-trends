@@ -8,8 +8,27 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 .trail {
-  display: flex;
-  flex-direction: column-reverse;
+  display: grid;
+  grid-template-areas:
+    "map"
+    "stats"
+    "week"
+    "calendar";
+  gap: 6px 6px;
+}
+.map {
+  grid-area: map;
+}
+.stats-data {
+  grid-area: stats;
+  place-self: center;
+}
+.graph-week {
+  grid-area: week;
+  place-self: center;
+}
+.graph-calendar {
+  grid-area: calendar;
 }
 header {
   text-align: center;
@@ -19,19 +38,21 @@ header {
 }
 .stat {
   font-size: 1.5em;
-  display: flex;
   padding-bottom: 5px;
-  max-width: 380px;
   margin: auto;
 }
 @media(min-width: 700px) {
+.trail {
+  grid-template-areas:
+    "map        stats"
+    "calendar   week";
+  grid-template-columns: 0.7fr 1fr;
+}
 .title, .trail, .weather {
-  max-width: 1100px;
+  max-width: 800px;
 }
 .trail {
-  flex-direction: row;
   margin: auto;
-  flex-order: normal;
 }
 .title {
   margin: auto;
@@ -50,17 +71,15 @@ header {
   margin-right: 1.5rem;
 }
 .map {
-  width: 35%;
 }
 .stats {
-  width: 65%;
 }
 .stat {
   font-size: 1.8em;
 }
 }
 img {
-  max-width: 100%;
+  width: 100%;
 }
 
 .stat label {
@@ -81,7 +100,7 @@ img {
 
 <div class="segment">
   <div class="title">
-    <h2>{{segment.trail}} - {{segment.strava.name}} (<a href="https://www.strava.com/segments/{{segment.segmentId}}">{{segment.segmentId}}</a>)</h2>
+    <h2><a href="https://www.strava.com/segments/{{segment.segmentId}}">{{segment.trail}} - {{segment.strava.name}}</a></h2>
   </div>
   <ul class="weather">
     <li>
@@ -116,34 +135,27 @@ img {
   </ul>
   <section class="trail">
     <div class="map">
-      <img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy">
+      <a href="https://www.strava.com/segments/{{segment.segmentId}}"><img src="images/map-{{segment.segmentId}}.png" alt="{{segment.strava.name}}" loading="lazy"></a>
     </div>
-    <div class="stats">
+    <div class="stats-data">
+      <div class="stat">
+        <label>Last ridden</label>
+        <span><relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time></span>
+      </div>
 
+      <div class="stat">
+        <label>Rides today</label>
+        <span>{{segment.stats.todayStats.count}}</span>
+      </div>
 
-      <div class="charting">
-        <div class="recent-data">
-          <div class="text-data">
-            <div class="stat">
-              <label>Last ridden</label>
-              <span><relative-time datetime="{{segment.stats.lastEffort.ts}}">{{segment.stats.lastEffort.ts}}</relative-time></span>
-            </div>
-
-            <div class="stat">
-              <label>Rides today</label>
-              <span>{{segment.stats.todayStats.count}}</span>
-            </div>
-
-            <div class="stat">
-              <label>Rides yesterday</label>
-              <span>{{segment.stats.yesterdayStats.count}}</span>
-            </div>
-          </div>
-          <div><img class="chart" src="{% charturi segment, 'timeline' %}" alt="chart"></div>
-        </div>
-        <div class="calendar"><img class="chart" src="{% charturi segment, 'calendar' %}" alt="chart"></div>
+      <div class="stat">
+        <label>Rides yesterday</label>
+        <span>{{segment.stats.yesterdayStats.count}}</span>
       </div>
     </div>
+    <div class="graph-calendar"><img class="chart" src="{% charturi segment, 'calendar' %}" alt="chart"></div>
+    <div class="graph-week"><img class="chart" src="{% charturi segment, 'timeline' %}" alt="chart"></div>
+  </div>
 
   </section>
 </div>

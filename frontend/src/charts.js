@@ -118,6 +118,7 @@ const renderChart = async (data) => {
 
 const renderCalendar = async (segment) => {
   const spec = {
+    title: 'Rides by Day of Week',
     width: 400,
     height: 300,
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -154,6 +155,7 @@ const renderCalendar = async (segment) => {
 const renderWeeklyTimeline = async (segment) => {
   const values = await generateDaysOfData(segment, 30);
   const spec = {
+    title: 'Recent Rides',
     width: 400,
     height: 100,
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -200,18 +202,14 @@ const generateDaysOfData = async (segment, daysOfData) => {
   tsValues.forEach((r) => {
     entries.push(r);
   });
-  // console.log('entries is of size', entries.length);
-  // console.log(entries[0])
   const ep = monthAgoDate.toZonedDateTime(Temporal.Now.timeZone()).epochSeconds;
   entries.forEach((d) => {
     let { effortCount, ts } = d;
     // const tsDate = ts.toDate();
     const temporalInstant = Temporal.Instant.from(ts);
     const tsDate = temporalInstant.toZonedDateTimeISO(tz);
-    const tsLegacyDate = new Date(temporalInstant.epochMilliseconds);
     // const entryAsDate = Temporal.Instant.from(d.ts.toDate()).toPlainDate();
-    const entryAsDate = tsDate
-      .toPlainDate()
+    const entryAsDate = tsDate.toPlainDate()
     const day = entryAsDate.toString();
     if (prev) {
       const f = Temporal.Instant.from(new Date(temporalInstant.epochMilliseconds).toISOString()).epochSeconds;
@@ -223,12 +221,8 @@ const generateDaysOfData = async (segment, daysOfData) => {
       const count = effortCount - prev;
       if (m.has(day) && count > 0) {
         const currentValue = m.get(day);
-        // console.log(
-        //   `has ${entryAsDate.toString()}, currently ${currentValue}, prev ${prev}, new ${effortCount}, diff ${count}`
-        // );
         m.set(day, currentValue + count);
       } else {
-        // console.log(`does not have ${entryAsDate}`)
       }
     }
     prev = effortCount;
