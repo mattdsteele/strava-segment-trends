@@ -5,7 +5,7 @@ const db = new Firestore({ projectId: "secret-strava" });
 const firebaseAllSegments = async () => {
   const omaha = ZoneId.of("America/Chicago");
   const today = LocalDateTime.now(omaha);
-  const startDateTime = today.minusDays(30);
+  const startDateTime = today.minusMonths(5).withDayOfMonth(1);
   const startDate = convert(startDateTime).toDate();
   const segments = await db.collection("segments").get();
 
