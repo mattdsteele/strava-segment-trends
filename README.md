@@ -21,4 +21,4 @@ Backend:
 
 * Built with Go
 * Hosted on [GCP Cloud Functions](https://cloud.google.com/functions/)
-* Data store with [Fauna + GraphQL](fauna.com)
+* Data store with GCP Firestore
