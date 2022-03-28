@@ -43,7 +43,7 @@ const uploadMap = async (segmentId) => {
   const map = await generateMap(strava);
   const storage = new Storage();
   const bucket = storage.bucket('segment-maps');
-  await bucket.writeFile(`map-${segmentId}.png`, map);
+  await bucket.file(`map-${segmentId}.png`).save(map);
 }
 module.exports.generateMap = generateMap;
 module.exports.saveMap = saveMap;
