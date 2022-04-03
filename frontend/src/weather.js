@@ -14,7 +14,13 @@ const observations = async stations => {
 }
 
 const transform = (station, data) => {
-  const d = JSON.parse(data)
+  let d;
+  try {
+    d = JSON.parse(data)
+  } catch (e) {
+    console.error(`Unable to get weather data for ${station}, response came back as ${data}`);
+    throw e;
+  }
 
   d.properties.stationId = station;
   d.properties.temperature.value =
