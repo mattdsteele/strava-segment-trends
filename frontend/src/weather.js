@@ -19,7 +19,21 @@ const transform = (station, data) => {
     d = JSON.parse(data)
   } catch (e) {
     console.error(`Unable to get weather data for ${station}, response came back as ${data}`);
-    throw e;
+    const na = {
+      value: 'N/A'
+    }
+    const defaultData = {
+      properties: {
+        stationId: station,
+        temperature: na,
+        heatIndex: na,
+        windSpeed: na,
+        windGust: na,
+        windDirection: na,
+        precipitationLast3Hours: na
+      }
+    }
+    return defaultData;
   }
 
   d.properties.stationId = station;
