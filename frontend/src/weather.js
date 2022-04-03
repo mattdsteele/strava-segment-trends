@@ -4,38 +4,35 @@ const d2d = require('degrees-to-direction');
 
 const observations = async stations => {
   const results = stations.map(async station => {
-    return await axios.get(
-      `https://api.weather.gov/stations/${station}/observations/latest`, {
-      transformResponse: data => transform(station, data)
-    });
+    try {
+      return await axios.get(
+        `https://api.weather.gov/stations/${station}/observations/latest`, {
+        transformResponse: data => transform(station, data)
+      });
+    } catch (e) {
+      console.error(`Unable to get weather data for ${station}`, e);
+      const na = {
+        value: 'N/A'
+      }
+      const defaultData = {
+        properties: {
+          stationId: station,
+          temperature: na,
+          heatIndex: na,
+          windSpeed: na,
+          windGust: na,
+          windDirection: na,
+          precipitationLast3Hours: na
+        }
+      }
+      return { data: defaultData };
+    }
   }, transform);
-
   return Promise.all(results);
 }
 
 const transform = (station, data) => {
-  let d;
-  try {
-    d = JSON.parse(data)
-  } catch (e) {
-    console.error(`Unable to get weather data for ${station}, response came back as ${data}`);
-    const na = {
-      value: 'N/A'
-    }
-    const defaultData = {
-      properties: {
-        stationId: station,
-        temperature: na,
-        heatIndex: na,
-        windSpeed: na,
-        windGust: na,
-        windDirection: na,
-        precipitationLast3Hours: na
-      }
-    }
-    return defaultData;
-  }
-
+  const d = JSON.parse(data)
   d.properties.stationId = station;
   d.properties.temperature.value =
     convert(d.properties.temperature.value).from('C').to('F');
