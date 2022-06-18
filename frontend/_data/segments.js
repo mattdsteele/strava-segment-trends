@@ -14,11 +14,11 @@ const generateStats = (segment) => {
   const omaha = ZoneId.of('America/Chicago');
   const startOfToday = ZonedDateTime.now(omaha)
     .toLocalDate()
-    .atStartOfDayWithZone(omaha);
+    .atStartOfDay();
   const endOfToday = ZonedDateTime.now(omaha)
     .plusDays(1)
     .toLocalDate()
-    .atStartOfDayWithZone(omaha);
+    .atStartOfDay();
   const todayRange = Interval.of(
     startOfToday.toInstant(),
     endOfToday.toInstant()
@@ -33,12 +33,12 @@ const generateStats = (segment) => {
   const startOfYesterday = ZonedDateTime.now(omaha)
     .minusDays(1)
     .toLocalDate()
-    .atStartOfDayWithZone(omaha);
+    .atStartOfDay();
   const endOfYesterday = ZonedDateTime.now(omaha)
     .minusDays(1)
     .plusDays(1)
     .toLocalDate()
-    .atStartOfDayWithZone(omaha);
+    .atStartOfDay();
   const yesterdayRange = Interval.of(
     startOfYesterday.toInstant(),
     endOfYesterday.toInstant()
