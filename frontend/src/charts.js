@@ -5,6 +5,8 @@ const {
 } = require('@js-joda/core');
 const { Temporal, toTemporalInstant } = require("@js-temporal/polyfill");
 Date.prototype.toTemporalInstant = toTemporalInstant;
+const vega = require('vega');
+const vegaLite = require('vega-lite');
 
 const statsForSegment = (segment) => {
   const omaha = ZoneId.of('America/Chicago');
@@ -232,8 +234,8 @@ const generateDaysOfData = async (segment, daysOfData) => {
 };
 
 const render = async (schema) => {
-  const { spec } = compile(schema);
-  const view = new View(parse(spec), { renderer: 'none' });
+  const { spec } = vegaLite.compile(schema);
+  const view = new vega.View(vega.parse(spec), { renderer: 'none' });
   const svg = await view.toSVG();
   return svg;
 };

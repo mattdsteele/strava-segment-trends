@@ -1,6 +1,6 @@
 const { allSegments } = require('../src/recent-segments');
 const { stravaData, generateCounts } = require('../src/strava');
-const { ZoneId, ZonedDateTime, ZoneOffset } = require('@js-joda/core');
+const { ZoneId, ZonedDateTime, ZoneOffset, LocalDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const { exists, downloadMap } = require('../src/maps');
@@ -12,7 +12,7 @@ const generateStats = (segment) => {
   const lastEffort = counts[counts.length - 1];
 
   const omaha = ZoneId.of('America/Chicago');
-  const omahaOffset = ZoneOffset.of(omaha.id());
+  const omahaOffset = omaha.rules().offset(LocalDateTime.now());
   const startOfToday = ZonedDateTime.now(omaha)
     .toLocalDate()
     .atStartOfDay();
