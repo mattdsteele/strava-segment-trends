@@ -237,13 +237,9 @@ const render = async (schema) => {
   const svg = await view.toSVG();
   return svg;
 };
-const _renderChart = renderChart;
-export { _renderChart as renderChart };
-const _renderCalendar = renderCalendar;
-export { _renderCalendar as renderCalendar };
-const _renderHeatmap = renderHeatmap;
-export { _renderHeatmap as renderHeatmap };
-const _statsForSegment = statsForSegment;
-export { _statsForSegment as statsForSegment };
-const _renderWeeklyTimeline = renderWeeklyTimeline;
-export { _renderWeeklyTimeline as renderWeeklyTimeline };
+
+module.exports.renderChart = renderChart;
+module.exports.renderCalendar = renderCalendar;
+module.exports.renderHeatmap = renderHeatmap;
+module.exports.statsForSegment = statsForSegment;
+module.exports.renderWeeklyTimeline = renderWeeklyTimeline;
