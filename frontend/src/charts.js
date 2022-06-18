@@ -1,13 +1,8 @@
-const {
-  ZonedDateTime,
-  DateTimeFormatter,
-  ZoneId,
-  Period,
-} = require('@js-joda/core');
-const { Temporal, toTemporalInstant } = require("@js-temporal/polyfill");
+import { ZonedDateTime, ZoneId, Period } from '@js-joda/core';
+import { Temporal, toTemporalInstant } from "@js-temporal/polyfill";
 Date.prototype.toTemporalInstant = toTemporalInstant;
-const vega = require('vega');
-const vegaLite = require('vega-lite');
+import { View, parse } from 'vega';
+import { compile } from 'vega-lite';
 
 const statsForSegment = (segment) => {
   const omaha = ZoneId.of('America/Chicago');
@@ -235,13 +230,18 @@ const generateDaysOfData = async (segment, daysOfData) => {
 };
 
 const render = async (schema) => {
-  const { spec } = vegaLite.compile(schema);
-  const view = new vega.View(vega.parse(spec), { renderer: 'none' });
+  const { spec } = compile(schema);
+  const view = new View(parse(spec), { renderer: 'none' });
   const svg = await view.toSVG();
   return svg;
 };
-module.exports.renderChart = renderChart;
-module.exports.renderCalendar = renderCalendar;
-module.exports.renderHeatmap = renderHeatmap;
-module.exports.statsForSegment = statsForSegment;
-module.exports.renderWeeklyTimeline = renderWeeklyTimeline;
+const _renderChart = renderChart;
+export { _renderChart as renderChart };
+const _renderCalendar = renderCalendar;
+export { _renderCalendar as renderCalendar };
+const _renderHeatmap = renderHeatmap;
+export { _renderHeatmap as renderHeatmap };
+const _statsForSegment = statsForSegment;
+export { _statsForSegment as statsForSegment };
+const _renderWeeklyTimeline = renderWeeklyTimeline;
+export { _renderWeeklyTimeline as renderWeeklyTimeline };

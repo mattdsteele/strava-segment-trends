@@ -3,7 +3,7 @@ const { stravaData, generateCounts } = require('../src/strava');
 const { ZoneId, ZonedDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
-const { saveMap, exists, generateMap, downloadMap } = require('../src/maps');
+const { exists, downloadMap } = require('../src/maps');
 const { checkOrGet, saveCache } = require('../src/cache');
 const { observations } = require('../src/weather');
 
