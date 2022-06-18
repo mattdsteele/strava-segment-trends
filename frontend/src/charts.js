@@ -1,8 +1,10 @@
-import { ZonedDateTime, ZoneId, Period } from '@js-joda/core';
-import { Temporal, toTemporalInstant } from "@js-temporal/polyfill";
+const {
+  ZonedDateTime,
+  ZoneId,
+  Period,
+} = require('@js-joda/core');
+const { Temporal, toTemporalInstant } = require("@js-temporal/polyfill");
 Date.prototype.toTemporalInstant = toTemporalInstant;
-import { View, parse } from 'vega';
-import { compile } from 'vega-lite';
 
 const statsForSegment = (segment) => {
   const omaha = ZoneId.of('America/Chicago');
