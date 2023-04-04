@@ -4,7 +4,7 @@ Built as a static app via the Eleventy SSG
 
 Requires Node 12+
 
-To run, first setup your environment; you'll need API keys for Strava, Fauna, and Maptiler, and Google. See `env-example` for details.
+To run, first setup your environment; you'll need API keys for Strava, Maptiler, and Google. See `env-example` for details.
 
 ```
 npm ci

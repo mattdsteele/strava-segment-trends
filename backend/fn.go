@@ -22,7 +22,6 @@ func GetLatestTrends(ctx context.Context, _ Message) error {
 		ClientId:     os.Getenv("STRAVA_CLIENT_ID"),
 		ClientSecret: os.Getenv("STRAVA_CLIENT_SECRET"),
 	})
-	// db := InitDb(os.Getenv("FAUNA_SECRET"))
 	db := InitFirestore(ctx)
 
 	t := &Trends{
