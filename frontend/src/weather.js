@@ -1,6 +1,7 @@
 const axios = require('axios').default;
 const convert = require('convert-units');
 const d2d = require('degrees-to-direction');
+const { env } = require('process');
 
 const observations = async stations => {
   const results = stations.map(async station => {
@@ -51,3 +52,12 @@ const transform = (station, data) => {
 }
 
 module.exports.observations = observations;
+
+module.exports.pirateweather = async (lat, lon) => {
+  const pirateKey = env['PIRATEWEATHER_KEY'];
+  const url = `https://api.pirateweather.net/forecast/${pirateKey}/${lat},${lon}`;
+  console.log(url);
+  const pirateResponse = await axios.get(url);
+  console.log(pirateResponse.data);
+  return pirateResponse.data;
+};

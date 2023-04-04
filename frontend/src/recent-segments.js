@@ -7,7 +7,6 @@ const firebaseAllSegments = async () => {
   const today = LocalDateTime.now(omaha);
   const startDateTime = today.minusMonths(5).withDayOfMonth(1);
   const startDate = convert(startDateTime).toDate();
-  const segments = await db.collection("segments").get();
 
   const addRecentCounts = async (segment) => {
     const countsRef = db.collection("counts");
@@ -27,6 +26,7 @@ const firebaseAllSegments = async () => {
     return segment;
   };
 
+  const segments = await db.collection("segments").get();
   const segmentPromises = [];
   segments.forEach((segmentRef) => {
     const segment = segmentRef.data();

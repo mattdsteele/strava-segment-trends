@@ -12,3 +12,6 @@ export GOOGLE_APPLICATION_CREDENTIALS=
 
 # maptiler
 export MAPTILER_KEY=
+
+# weather
+export PIRATEWEATHER_KEY=

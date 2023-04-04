@@ -5,7 +5,7 @@ const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const { exists, downloadMap } = require('../src/maps');
 const { checkOrGet, saveCache } = require('../src/cache');
-const { observations } = require('../src/weather');
+const { observations, pirateweather } = require('../src/weather');
 
 const generateStats = (segment) => {
   const counts = segment.counts;
@@ -113,6 +113,9 @@ const addWeatherObservations = async (segmentData) => {
   const uniqueStations = new Set();
 
   for (const segment of segmentData) {
+    const [lat, lon] = segment.strava.start_latlng;
+    const pirateWeather = await pirateweather(lat, lon);
+    console.log(JSON.stringify(pirateWeather, null, 2));
     uniqueStations.add(segment.weatherStationId);
   }
 
