@@ -47,8 +47,7 @@ jobs:
           cd frontend
           npm ci
           npm run build
-          echo 'Done'
-          ls -la _site/images
+          npm run copy-images
       - name: Deploy to Netlify
         uses: 'netlify/actions/cli@master'
         env:
