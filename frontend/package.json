@@ -7,14 +7,14 @@
     "build": "eleventy",
     "serve": "eleventy --serve",
     "serve-debug": "DEBUG=true eleventy --serve",
-    "clean": "del-cli node_modules/flat-cache/.cache",
+    "clean": "del-cli node_modules/flat-cache/.cache .cache",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@11ty/eleventy": "^1",
+    "@11ty/eleventy": "^2.0.1",
     "@google-cloud/storage": "^5.1.1",
     "@js-joda/core": "^5.0.0",
     "@js-joda/extra": "^0.8.0",
