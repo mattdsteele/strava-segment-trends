@@ -1,11 +1,11 @@
 const { allSegments } = require('../src/recent-segments');
 const { stravaData, generateCounts } = require('../src/strava');
-const { ZoneId, ZonedDateTime, ZoneOffset, LocalDateTime } = require('@js-joda/core');
+const { ZoneId, ZonedDateTime, LocalDateTime } = require('@js-joda/core');
 const { Interval } = require('@js-joda/extra');
 require('@js-joda/timezone');
 const { exists, downloadMap } = require('../src/maps');
 const { checkOrGet, saveCache } = require('../src/cache');
-const { observations, pirateweather } = require('../src/weather');
+const { pirateweather } = require('../src/weather');
 
 const generateStats = (segment) => {
   const counts = segment.counts;
@@ -110,27 +110,11 @@ const allSegmentData = async () => {
 };
 
 const addWeatherObservations = async (segments) => {
-  const uniqueStations = new Set();
-
   for (const segment of segments) {
     const digitsOfPrecision = 3; // https://pirateweather.net/en/latest/API/#location
     const [lat, lon] = segment.strava.start_latlng.map(p => (p).toFixed(digitsOfPrecision));
     const pirateWeather = await pirateweather(lat, lon);
     segment.weather = pirateWeather;
-    uniqueStations.add(segment.weatherStationId);
-  }
-
-  uniqueStations.delete(null);
-  const obs = await checkOrGet(
-    'weatherObservations',
-    async () => observations([...uniqueStations]),
-    undefined
-  );
-
-  for (const segment of segments) {
-    segment.observations = obs.find((o) => {
-      return o.data.properties.stationId === segment.weatherStationId;
-    }).data.properties;
   }
 };
 

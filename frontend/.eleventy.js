@@ -2,6 +2,7 @@ const { pluralize } = require('journalize');
 const { renderCalendar, renderWeeklyTimeline } = require('./src/charts');
 const { ZonedDateTime, ZoneId, DateTimeFormatter } = require('@js-joda/core');
 const { Locale } = require('@js-joda/locale_en-us');
+const d2d = require('degrees-to-direction');
 module.exports = (eleventyConfig) => {
   eleventyConfig.addFilter('pluralize', (value) => pluralize(value));
   eleventyConfig.addPassthroughCopy('images');
@@ -12,9 +13,7 @@ module.exports = (eleventyConfig) => {
     return z;
   });
   eleventyConfig.addFilter("compass", (value) => {
-    const val = Math.floor(value / 22.5 + 0.5);
-    const arr = [ "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-    return arr[val % 16];
+    return d2d(value);
   });
   eleventyConfig.addFilter('pctRound', value => {
     return (value * 100).toFixed(0);
