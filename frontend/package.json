@@ -27,7 +27,7 @@
     "axios-debug-log": "^0.7.0",
     "convert-units": "^2.3.4",
     "del-cli": "^3.0.1",
-    "flat-cache": "^2.0.1",
+    "flat-cache": "^3",
     "journalize": "^2.4.0",
     "osm-static-maps": "^3.8.0",
     "strava-client": "file:strava-client-3.0.0.tgz",

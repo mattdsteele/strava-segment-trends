@@ -1,5 +1,6 @@
-const flatCache = require('flat-cache');
-const cache = flatCache.load('segments');
+const { resolve } = require("path");
+const flatCache = require("flat-cache");
+const cache = flatCache.load("segments", resolve(".cache/flatcache"));
 const checkOrGet = async (key, fn, id) => {
   let cached = cache.getKey(key);
   if (!cached) {
