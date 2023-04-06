@@ -11,6 +11,14 @@ module.exports = (eleventyConfig) => {
       .format(DateTimeFormatter.ofPattern('MM/dd ha').withLocale(Locale.US));
     return z;
   });
+  eleventyConfig.addFilter("compass", (value) => {
+    const val = Math.floor(value / 22.5 + 0.5);
+    const arr = [ "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+    return arr[val % 16];
+  });
+  eleventyConfig.addFilter('pctRound', value => {
+    return (value * 100).toFixed(0);
+  });
   eleventyConfig.addNunjucksAsyncShortcode('charturi', async (segment, chartType) => {
     const mappings = {
       calendar: renderCalendar,

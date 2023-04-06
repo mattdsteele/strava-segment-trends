@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const convert = require('convert-units');
 const d2d = require('degrees-to-direction');
 const { env } = require('process');
+const EleventyFetch = require('@11ty/eleventy-fetch');
 
 const observations = async stations => {
   const results = stations.map(async station => {
@@ -57,7 +58,5 @@ module.exports.pirateweather = async (lat, lon) => {
   const pirateKey = env['PIRATEWEATHER_KEY'];
   const url = `https://api.pirateweather.net/forecast/${pirateKey}/${lat},${lon}`;
   console.log(url);
-  const pirateResponse = await axios.get(url);
-  console.log(pirateResponse.data);
-  return pirateResponse.data;
+  return await EleventyFetch(url, {duration: '6h', type: 'json'});
 };

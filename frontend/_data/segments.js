@@ -75,14 +75,14 @@ const generateStats = (segment) => {
   };
 };
 const allSegmentData = async () => {
-  const segmentData = await checkOrGet(
+  const segments = await checkOrGet(
     'segment-counts',
     async () => await allSegments(),
     undefined
   );
 
   const augmentedSegmentData = await Promise.all(
-    segmentData.map(async (segment) => {
+    segments.map(async (segment) => {
       const { segmentId } = segment;
       segment.strava = await checkOrGet(
         `segment-${segmentId}`,
@@ -103,19 +103,20 @@ const allSegmentData = async () => {
     })
   );
 
-  await addWeatherObservations(segmentData);
+  await addWeatherObservations(segments);
 
   saveCache();
   return augmentedSegmentData;
 };
 
-const addWeatherObservations = async (segmentData) => {
+const addWeatherObservations = async (segments) => {
   const uniqueStations = new Set();
 
-  for (const segment of segmentData) {
-    const [lat, lon] = segment.strava.start_latlng;
+  for (const segment of segments) {
+    const digitsOfPrecision = 3; // https://pirateweather.net/en/latest/API/#location
+    const [lat, lon] = segment.strava.start_latlng.map(p => (p).toFixed(digitsOfPrecision));
     const pirateWeather = await pirateweather(lat, lon);
-    console.log(JSON.stringify(pirateWeather, null, 2));
+    segment.weather = pirateWeather;
     uniqueStations.add(segment.weatherStationId);
   }
 
@@ -126,7 +127,7 @@ const addWeatherObservations = async (segmentData) => {
     undefined
   );
 
-  for (const segment of segmentData) {
+  for (const segment of segments) {
     segment.observations = obs.find((o) => {
       return o.data.properties.stationId === segment.weatherStationId;
     }).data.properties;

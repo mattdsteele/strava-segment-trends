@@ -35,6 +35,7 @@
     "vega-lite": "^5.2.0"
   },
   "dependencies": {
+    "@11ty/eleventy-fetch": "^4.0.0",
     "@google-cloud/firestore": "^4.8.1",
     "@js-temporal/polyfill": "^0.4.0",
     "degrees-to-direction": "^1.1.1",

@@ -104,33 +104,25 @@ img {
   </div>
   <ul class="weather">
     <li>
-      <b>Current conditions</b> 
+      <b>Current conditions</b>
     </li>
     <li>
       <span>
-        {{segment.observations.temperature.value | round}}&#176; | 
-        {{segment.observations.heatIndex.value | round}}&#176; heat index
+        {{segment.weather.currently.temperature | round}}&#176; | 
+        {{segment.weather.currently.apparentTemperature | round}}&#176; feels like
       </span>
     </li>
     <li>
       <label>Humidity:<label/> 
-      <span>{{segment.observations.relativeHumidity.value | round}}%</span>
+      <span>{{segment.weather.currently.humidity | pctRound }}%</span>
     </li>
     <li>
       <label>Wind:</label>
       <span>
-        {% if segment.observations.windDirection.value !== -1 %}
-          {{segment.observations.windDirection.value}} 
-        {% endif %}
-        {{segment.observations.windSpeed.value | round}} mph
-        {% if segment.observations.windGust.value %} 
-          gusting {{segment.observations.windGust.value | round}} mph
-        {% endif %}
+        {{segment.weather.currently.windBearing | compass }}
+        {{segment.weather.currently.windSpeed | round }} mph
+          gusting {{segment.weather.currently.windGust | round}} mph
       </span>
-    </li>
-    <li>
-      <label>Rain:</label>
-      <span>{{segment.observations.precipitationLast3Hours.value}}" last 3 hours</span>
     </li>
   </ul>
   <section class="trail">
