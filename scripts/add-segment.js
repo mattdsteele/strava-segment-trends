@@ -36,6 +36,6 @@ const d = {
     trail: trailName,
     weatherStationId: weather
 }
-const newDoc = await db.collection("segments").doc();
-await newDoc.set(d);
+//const newDoc = await db.collection("segments").doc();
+//await newDoc.set(d);
 console.log('uploaded')
